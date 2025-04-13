@@ -125,7 +125,10 @@ const ReferralProgram = () => {
         </div>
 
         {/* Rewards Table */}
-        <GlassmorphicCard className="overflow-hidden animate-slide-up" style={{ animationDelay: '400ms' }}>
+        <GlassmorphicCard 
+          className="overflow-hidden animate-slide-up" 
+          delay={400}
+        >
           <div className="p-8">
             <h2 className="text-xl font-bold mb-6 text-center">Referral Rewards</h2>
             <div className="overflow-x-auto">

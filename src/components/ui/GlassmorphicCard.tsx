@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 
 interface GlassmorphicCardProps {
@@ -8,6 +8,7 @@ interface GlassmorphicCardProps {
   hover?: boolean;
   animation?: 'fade-in' | 'slide-up' | 'scale' | 'none';
   delay?: number;
+  style?: CSSProperties;
 }
 
 const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
@@ -15,7 +16,8 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
   children,
   hover = true,
   animation = 'none',
-  delay = 0
+  delay = 0,
+  style
 }) => {
   const getAnimationClass = () => {
     switch (animation) {
@@ -34,7 +36,10 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
         getAnimationClass(),
         className
       )}
-      style={{ animationDelay: delay ? `${delay}ms` : '0ms' }}
+      style={{ 
+        animationDelay: delay ? `${delay}ms` : '0ms',
+        ...style
+      }}
     >
       {children}
     </div>
