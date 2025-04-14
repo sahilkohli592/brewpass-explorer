@@ -11,6 +11,7 @@ import LoyaltyCard from "./pages/LoyaltyCard";
 import ReferralProgram from "./pages/ReferralProgram";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Payment from "./pages/Payment";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
               <Route path="/loyalty-card" element={<LoyaltyCard />} />
               <Route path="/referral" element={<ReferralProgram />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/payment" element={<Payment />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

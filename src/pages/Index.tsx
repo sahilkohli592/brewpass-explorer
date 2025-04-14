@@ -74,9 +74,11 @@ const Index = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4 animate-slide-up" style={{ animationDelay: '400ms' }}>
-              <Button size="lg" className="btn-primary">
-                Get Your Pass Now
-              </Button>
+              <Link to="/payment">
+                <Button size="lg" className="btn-primary">
+                  Get Your Pass Now
+                </Button>
+              </Link>
               
               <Link to="/cafes">
                 <Button variant="outline" size="lg" className="group">
@@ -133,9 +135,11 @@ const Index = () => {
               <p className="text-lg text-foreground/70 max-w-2xl mx-auto mb-8">
                 Join thousands of coffee enthusiasts who have already discovered new favorite cafés with BrewPass.
               </p>
-              <Button size="lg" className="btn-primary">
-                Get Your BrewPass Today
-              </Button>
+              <Link to="/payment">
+                <Button size="lg" className="btn-primary">
+                  Get Your BrewPass Today
+                </Button>
+              </Link>
             </div>
           </GlassmorphicCard>
         </div>
