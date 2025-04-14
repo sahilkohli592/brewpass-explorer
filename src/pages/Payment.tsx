@@ -14,13 +14,16 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
-import { CreditCard, Coffee, CheckCircle } from 'lucide-react';
+import { CreditCard, Coffee, CheckCircle, Smartphone } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Payment = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [upiId, setUpiId] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('card');
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,47 +57,89 @@ const Payment = () => {
           <div className="md:col-span-3">
             <GlassmorphicCard className="p-6" animation="fade-in">
               <h2 className="text-xl font-semibold mb-6 flex items-center">
-                <CreditCard className="mr-2 h-5 w-5" />
                 Payment Details
               </h2>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Cardholder Name</Label>
-                  <Input id="name" placeholder="John Doe" required />
-                </div>
+              <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsTrigger value="card" className="flex items-center justify-center gap-2">
+                    <CreditCard className="h-4 w-4" />
+                    Card
+                  </TabsTrigger>
+                  <TabsTrigger value="upi" className="flex items-center justify-center gap-2">
+                    <Smartphone className="h-4 w-4" />
+                    UPI
+                  </TabsTrigger>
+                </TabsList>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="cardNumber">Card Number</Label>
-                  <Input 
-                    id="cardNumber" 
-                    placeholder="1234 5678 9012 3456" 
-                    maxLength={19}
-                    required 
-                  />
-                </div>
+                <TabsContent value="card">
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Cardholder Name</Label>
+                      <Input id="name" placeholder="John Doe" required />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="cardNumber">Card Number</Label>
+                      <Input 
+                        id="cardNumber" 
+                        placeholder="1234 5678 9012 3456" 
+                        maxLength={19}
+                        required 
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="expiry">Expiry Date</Label>
+                        <Input id="expiry" placeholder="MM/YY" maxLength={5} required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cvc">CVC</Label>
+                        <Input id="cvc" placeholder="123" maxLength={3} required />
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4">
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={isProcessing}
+                      >
+                        {isProcessing ? "Processing..." : "Pay $29.99"}
+                      </Button>
+                    </div>
+                  </form>
+                </TabsContent>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="expiry">Expiry Date</Label>
-                    <Input id="expiry" placeholder="MM/YY" maxLength={5} required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cvc">CVC</Label>
-                    <Input id="cvc" placeholder="123" maxLength={3} required />
-                  </div>
-                </div>
-                
-                <div className="pt-4">
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isProcessing}
-                  >
-                    {isProcessing ? "Processing..." : "Pay $29.99"}
-                  </Button>
-                </div>
-              </form>
+                <TabsContent value="upi">
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="upiId">UPI ID</Label>
+                      <Input 
+                        id="upiId" 
+                        placeholder="username@upi" 
+                        value={upiId}
+                        onChange={(e) => setUpiId(e.target.value)}
+                        required 
+                      />
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Enter your UPI ID (e.g., name@ybl, phone@upi)
+                      </p>
+                    </div>
+                    
+                    <div className="pt-4">
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={isProcessing}
+                      >
+                        {isProcessing ? "Processing..." : "Pay ₹2,499 with UPI"}
+                      </Button>
+                    </div>
+                  </form>
+                </TabsContent>
+              </Tabs>
             </GlassmorphicCard>
           </div>
           
@@ -109,12 +154,12 @@ const Payment = () => {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span>BrewPass (30 Drinks)</span>
-                  <span>$29.99</span>
+                  <span>{paymentMethod === 'card' ? '$29.99' : '₹2,499'}</span>
                 </div>
                 
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>$29.99</span>
+                  <span>{paymentMethod === 'card' ? '$29.99' : '₹2,499'}</span>
                 </div>
                 
                 <div className="pt-4 text-sm text-gray-600 dark:text-gray-400">
@@ -143,6 +188,11 @@ const Payment = () => {
             <div className="py-6 text-center">
               <p className="mb-4">
                 Thank you for purchasing BrewPass! Your digital passport is now ready.
+              </p>
+              <p className="text-sm text-gray-500">
+                {paymentMethod === 'card' 
+                  ? 'Your credit card payment was successful.' 
+                  : 'Your UPI payment was successful.'}
               </p>
               <p className="text-sm text-gray-500">
                 You can access your BrewPass in the Loyalty Card section.
