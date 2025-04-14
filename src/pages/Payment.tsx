@@ -76,7 +76,10 @@ const Payment = () => {
                 <UpiPaymentForm
                   upiId={upiId}
                   setUpiId={setUpiId}
-                  onSubmit={handleSubmit}
+                  onSubmit={(e) => {
+                    setPaymentMethod('upi');
+                    handleSubmit(e);
+                  }}
                   isProcessing={isProcessing}
                 />
               </div>

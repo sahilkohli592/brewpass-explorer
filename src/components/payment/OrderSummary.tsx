@@ -33,6 +33,12 @@ const OrderSummary = ({ paymentMethod }: OrderSummaryProps) => {
             <li>Access to exclusive coffee events</li>
           </ul>
         </div>
+
+        {paymentMethod === 'upi' && (
+          <div className="pt-2 text-sm text-blue-600 dark:text-blue-400">
+            <p>UPI payments can be made directly through your preferred UPI app using the provided QR code or by entering your UPI ID.</p>
+          </div>
+        )}
       </div>
     </>
   );
