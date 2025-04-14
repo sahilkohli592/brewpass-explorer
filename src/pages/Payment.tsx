@@ -14,8 +14,9 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
-import { CreditCard, Coffee, CheckCircle, Smartphone } from 'lucide-react';
+import { CreditCard, Coffee, CheckCircle, Smartphone, CircleDashed } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -60,86 +61,94 @@ const Payment = () => {
                 Payment Details
               </h2>
               
-              <Tabs defaultValue="card" onValueChange={setPaymentMethod} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6">
-                  <TabsTrigger value="card" className="flex items-center justify-center gap-2">
-                    <CreditCard className="h-4 w-4" />
-                    Card
-                  </TabsTrigger>
-                  <TabsTrigger value="upi" className="flex items-center justify-center gap-2">
-                    <Smartphone className="h-4 w-4" />
-                    UPI
-                  </TabsTrigger>
-                </TabsList>
+              <div className="space-y-5 mb-6">
+                <div className="flex items-center justify-center gap-2">
+                  <CreditCard className="h-5 w-5" />
+                  <h3 className="font-medium">Card Payment</h3>
+                </div>
                 
-                <TabsContent value="card">
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Cardholder Name</Label>
+                    <Input id="name" placeholder="John Doe" required />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="cardNumber">Card Number</Label>
+                    <Input 
+                      id="cardNumber" 
+                      placeholder="1234 5678 9012 3456" 
+                      maxLength={19}
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Cardholder Name</Label>
-                      <Input id="name" placeholder="John Doe" required />
+                      <Label htmlFor="expiry">Expiry Date</Label>
+                      <Input id="expiry" placeholder="MM/YY" maxLength={5} required />
                     </div>
-                    
                     <div className="space-y-2">
-                      <Label htmlFor="cardNumber">Card Number</Label>
-                      <Input 
-                        id="cardNumber" 
-                        placeholder="1234 5678 9012 3456" 
-                        maxLength={19}
-                        required 
-                      />
+                      <Label htmlFor="cvc">CVC</Label>
+                      <Input id="cvc" placeholder="123" maxLength={3} required />
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="expiry">Expiry Date</Label>
-                        <Input id="expiry" placeholder="MM/YY" maxLength={5} required />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cvc">CVC</Label>
-                        <Input id="cvc" placeholder="123" maxLength={3} required />
-                      </div>
-                    </div>
-                    
-                    <div className="pt-4">
-                      <Button 
-                        type="submit" 
-                        className="w-full" 
-                        disabled={isProcessing}
-                      >
-                        {isProcessing ? "Processing..." : "Pay $29.99"}
-                      </Button>
-                    </div>
-                  </form>
-                </TabsContent>
+                  </div>
+                  
+                  <div className="pt-4">
+                    <Button 
+                      type="submit" 
+                      className="w-full" 
+                      disabled={isProcessing}
+                    >
+                      {isProcessing ? "Processing..." : "Pay $29.99"}
+                    </Button>
+                  </div>
+                </form>
                 
-                <TabsContent value="upi">
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="upiId">UPI ID</Label>
-                      <Input 
-                        id="upiId" 
-                        placeholder="username@upi" 
-                        value={upiId}
-                        onChange={(e) => setUpiId(e.target.value)}
-                        required 
-                      />
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Enter your UPI ID (e.g., name@ybl, phone@upi)
-                      </p>
-                    </div>
-                    
-                    <div className="pt-4">
-                      <Button 
-                        type="submit" 
-                        className="w-full" 
-                        disabled={isProcessing}
-                      >
-                        {isProcessing ? "Processing..." : "Pay ₹2,499 with UPI"}
-                      </Button>
-                    </div>
-                  </form>
-                </TabsContent>
-              </Tabs>
+                <div className="relative my-8">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-4 text-sm text-muted-foreground flex items-center gap-2">
+                      <CircleDashed className="h-4 w-4" />
+                      OR
+                      <CircleDashed className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-center gap-2">
+                  <Smartphone className="h-5 w-5" />
+                  <h3 className="font-medium">UPI Payment</h3>
+                </div>
+                
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="upiId">UPI ID</Label>
+                    <Input 
+                      id="upiId" 
+                      placeholder="username@upi" 
+                      value={upiId}
+                      onChange={(e) => setUpiId(e.target.value)}
+                      required 
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Enter your UPI ID (e.g., name@ybl, phone@upi)
+                    </p>
+                  </div>
+                  
+                  <div className="pt-4">
+                    <Button 
+                      type="submit" 
+                      className="w-full" 
+                      disabled={isProcessing}
+                    >
+                      {isProcessing ? "Processing..." : "Pay ₹2,499 with UPI"}
+                    </Button>
+                  </div>
+                </form>
+              </div>
             </GlassmorphicCard>
           </div>
           
