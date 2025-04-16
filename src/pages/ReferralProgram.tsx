@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Users, Copy, Share } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
@@ -10,12 +9,13 @@ const ReferralProgram = () => {
   const { toast } = useToast();
   const [referralCode] = useState("BREWYUM2023");
 
-  // Simulated rewards data
+  // Updated rewards data - ₹50 cashback for each referral
   const rewards = [
-    { friends: 1, reward: "₹100 Cashback" },
-    { friends: 3, reward: "1 Extra Free Drink" },
-    { friends: 5, reward: "25% Off on Annual Pass" },
-    { friends: 10, reward: "1 Month Free Subscription" }
+    { friends: 1, reward: "₹50 Cashback" },
+    { friends: 2, reward: "₹100 Cashback" },
+    { friends: 3, reward: "₹150 Cashback + 1 Free Drink" },
+    { friends: 5, reward: "₹250 Cashback + 25% Off on Annual Pass" },
+    { friends: 10, reward: "₹500 Cashback + 1 Month Free Subscription" }
   ];
 
   const copyToClipboard = () => {
@@ -49,7 +49,7 @@ const ReferralProgram = () => {
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-4">Refer Friends & Earn Rewards</h1>
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-            Invite your friends to join BrewPass and earn amazing rewards for each successful referral.
+            Invite your friends to join BrewPass and earn ₹50 cashback for each successful referral.
           </p>
         </div>
 
@@ -152,7 +152,7 @@ const ReferralProgram = () => {
             
             <div className="mt-6 text-center">
               <p className="text-sm text-foreground/70">
-                There's no limit to how many friends you can refer or rewards you can earn!
+                Get ₹50 cashback for each friend you refer! There's no limit to how many friends you can refer or rewards you can earn!
               </p>
             </div>
           </div>
