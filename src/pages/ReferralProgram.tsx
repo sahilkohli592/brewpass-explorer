@@ -1,10 +1,16 @@
 
 import React, { useState } from 'react';
-import { Users, Copy, Share } from 'lucide-react';
+import { Users, Copy, Share, MessageCircle, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const ReferralProgram = () => {
   const { toast } = useToast();
@@ -27,13 +33,40 @@ const ReferralProgram = () => {
     });
   };
 
+  const shareMessage = `Join me on BrewPass! Use my referral code ${referralCode} to get ₹100 off on your first BrewPass!`;
+  const shareUrl = 'https://brewpass.com/refer';
+
+  const shareViaWhatsApp = () => {
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage + " " + shareUrl)}`;
+    window.open(whatsappUrl, '_blank');
+    toast({ title: "Opening WhatsApp", description: "Sharing referral code via WhatsApp" });
+  };
+
+  const shareViaFacebook = () => {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareMessage)}`;
+    window.open(facebookUrl, '_blank');
+    toast({ title: "Opening Facebook", description: "Sharing referral code via Facebook" });
+  };
+
+  const shareViaTwitter = () => {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(twitterUrl, '_blank');
+    toast({ title: "Opening Twitter", description: "Sharing referral code via Twitter" });
+  };
+
+  const shareViaLinkedIn = () => {
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&summary=${encodeURIComponent(shareMessage)}`;
+    window.open(linkedinUrl, '_blank');
+    toast({ title: "Opening LinkedIn", description: "Sharing referral code via LinkedIn" });
+  };
+
   const shareReferral = () => {
     // In a real app, implement proper sharing functionality
     if (navigator.share) {
       navigator.share({
         title: 'Join me on BrewPass',
-        text: `Use my referral code ${referralCode} to get ₹100 off on your first BrewPass!`,
-        url: 'https://brewpass.com/refer',
+        text: shareMessage,
+        url: shareUrl,
       })
       .catch((error) => console.log('Error sharing', error));
     } else {
@@ -77,14 +110,37 @@ const ReferralProgram = () => {
                 <Copy className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
                 Copy Code
               </Button>
-              <Button 
-                variant="outline" 
-                className="group" 
-                onClick={shareReferral}
-              >
-                <Share className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                Share with Friends
-              </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="group">
+                    <Share className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                    Share with Friends
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-56">
+                  <DropdownMenuItem onClick={shareViaWhatsApp} className="cursor-pointer">
+                    <MessageCircle className="mr-2 h-4 w-4 text-green-500" />
+                    <span>WhatsApp</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={shareViaFacebook} className="cursor-pointer">
+                    <Facebook className="mr-2 h-4 w-4 text-blue-600" />
+                    <span>Facebook</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={shareViaTwitter} className="cursor-pointer">
+                    <Twitter className="mr-2 h-4 w-4 text-sky-500" />
+                    <span>Twitter</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={shareViaLinkedIn} className="cursor-pointer">
+                    <Linkedin className="mr-2 h-4 w-4 text-blue-700" />
+                    <span>LinkedIn</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={shareReferral} className="cursor-pointer">
+                    <Share className="mr-2 h-4 w-4" />
+                    <span>Native Share</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </GlassmorphicCard>
