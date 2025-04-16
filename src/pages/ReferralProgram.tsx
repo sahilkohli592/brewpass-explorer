@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Users, Copy, Share } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
@@ -9,13 +10,13 @@ const ReferralProgram = () => {
   const { toast } = useToast();
   const [referralCode] = useState("BREWYUM2023");
 
-  // Updated rewards data - ₹50 cashback for each referral
+  // Updated rewards data - consistently ₹50 cashback per friend
   const rewards = [
     { friends: 1, reward: "₹50 Cashback" },
-    { friends: 2, reward: "₹100 Cashback" },
-    { friends: 3, reward: "₹150 Cashback + 1 Free Drink" },
-    { friends: 5, reward: "₹250 Cashback + 25% Off on Annual Pass" },
-    { friends: 10, reward: "₹500 Cashback + 1 Month Free Subscription" }
+    { friends: 2, reward: "₹100 Cashback (₹50 × 2)" },
+    { friends: 3, reward: "₹150 Cashback (₹50 × 3)" },
+    { friends: 5, reward: "₹250 Cashback (₹50 × 5)" },
+    { friends: 10, reward: "₹500 Cashback (₹50 × 10)" }
   ];
 
   const copyToClipboard = () => {
