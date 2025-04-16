@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Coffee, List, X, CreditCard, Users, LogIn } from 'lucide-react';
+import { Coffee, List, X, CreditCard, Users, LogIn, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Navbar = () => {
@@ -29,6 +29,7 @@ const Navbar = () => {
     { name: 'My Pass', path: '/loyalty-card', icon: <CreditCard className="w-4 h-4" /> },
     { name: 'Refer', path: '/referral', icon: <Users className="w-4 h-4" /> },
     { name: 'Login', path: '/login', icon: <LogIn className="w-4 h-4" /> },
+    { name: 'Admin', path: '/admin', icon: <LayoutDashboard className="w-4 h-4" /> },
   ];
 
   return (

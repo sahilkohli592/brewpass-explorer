@@ -12,6 +12,7 @@ import ReferralProgram from "./pages/ReferralProgram";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Payment from "./pages/Payment";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/referral" element={<ReferralProgram />} />
               <Route path="/login" element={<Login />} />
               <Route path="/payment" element={<Payment />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
