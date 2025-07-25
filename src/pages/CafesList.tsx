@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Coffee, ArrowRight, Phone, Map, Star, ThumbsUp } from 'lucide-react';
+import { Search, MapPin, Coffee, ArrowRight, Phone, Map, Star, ThumbsUp, Tag, Ticket } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 // Dummy data - would come from an API in a real app
 const cafesData = [
@@ -28,6 +29,14 @@ const cafesData = [
     rating: 4.8,
     menu: ["Espresso", "Cappuccino", "Pour Over", "Cold Brew", "Snacks"],
     recommended: ["House Special Pour Over", "Blueberry Cheesecake"],
+    vouchers: [
+      { id: "V001", title: "20% Off First Order", description: "Get 20% off on your first purchase", type: "discount" },
+      { id: "V002", title: "Free Coffee", description: "Buy 3 coffees, get 1 free", type: "freebie" }
+    ],
+    discounts: [
+      { title: "Student Discount", description: "15% off with valid student ID" },
+      { title: "Weekend Special", description: "Buy 2 pastries, get 1 free on weekends" }
+    ],
     location: {
       lat: 28.6006,
       lng: 77.2272
@@ -43,6 +52,13 @@ const cafesData = [
     rating: 4.5,
     menu: ["Latte", "Flat White", "Americano", "Croissants", "Cakes"],
     recommended: ["Signature Flat White", "Chocolate Croissant"],
+    vouchers: [
+      { id: "V003", title: "₹50 Off", description: "₹50 off on orders above ₹300", type: "discount" }
+    ],
+    discounts: [
+      { title: "Early Bird Special", description: "25% off on orders before 10 AM" },
+      { title: "Corporate Discount", description: "10% off for corporate employees" }
+    ],
     location: {
       lat: 12.9784,
       lng: 77.6408
@@ -58,6 +74,13 @@ const cafesData = [
     rating: 4.2,
     menu: ["Frappuccino", "Cold Brew", "Latte", "Macchiato", "Sandwiches"],
     recommended: ["Java Chip Frappuccino", "Protein Box"],
+    vouchers: [
+      { id: "V004", title: "Happy Hour", description: "Buy 1 Get 1 on all frappuccinos (3-5 PM)", type: "bogo" },
+      { id: "V005", title: "Loyalty Reward", description: "Free drink on your 10th visit", type: "freebie" }
+    ],
+    discounts: [
+      { title: "Birthday Special", description: "Free birthday drink with any purchase" }
+    ],
     location: {
       lat: 28.6315,
       lng: 77.2167
@@ -73,6 +96,13 @@ const cafesData = [
     rating: 4.7,
     menu: ["Pour Over", "Aeropress", "Espresso", "Breakfast", "Lunch"],
     recommended: ["Ethiopian Single Origin", "Avocado Toast"],
+    vouchers: [
+      { id: "V006", title: "Coffee Bean Discount", description: "30% off on all coffee beans", type: "discount" }
+    ],
+    discounts: [
+      { title: "Combo Deal", description: "Coffee + Breakfast combo for ₹250" },
+      { title: "Senior Citizen", description: "20% off for customers above 60" }
+    ],
     location: {
       lat: 17.4256,
       lng: 78.4542
@@ -88,6 +118,13 @@ const cafesData = [
     rating: 4.0,
     menu: ["Devil's Own", "Tropical Iceberg", "Sandwiches", "Desserts"],
     recommended: ["Devil's Own", "Choco Fantasy"],
+    vouchers: [
+      { id: "V007", title: "CCD Special", description: "₹100 off on orders above ₹500", type: "discount" }
+    ],
+    discounts: [
+      { title: "Group Discount", description: "15% off for groups of 4 or more" },
+      { title: "Afternoon Delight", description: "Free dessert with any cold coffee (2-4 PM)" }
+    ],
     location: {
       lat: 12.9719,
       lng: 77.6412
@@ -103,6 +140,13 @@ const cafesData = [
     rating: 4.6,
     menu: ["Filter Coffee", "French Press", "Muffins", "Cookies"],
     recommended: ["Araku Signature Filter Coffee", "Chocolate Chip Cookie"],
+    vouchers: [
+      { id: "V008", title: "Filter Coffee Special", description: "Buy 2 filter coffees, get 1 free", type: "bogo" }
+    ],
+    discounts: [
+      { title: "Local Special", description: "10% off for Bangalore residents with address proof" },
+      { title: "First Time Visitor", description: "Complimentary cookie with any coffee" }
+    ],
     location: {
       lat: 12.9783,
       lng: 77.6408
@@ -286,6 +330,55 @@ const CafesList = () => {
                             </CardContent>
                           </Card>
                         </div>
+
+                        {/* Vouchers */}
+                        {cafe.vouchers && cafe.vouchers.length > 0 && (
+                          <div>
+                            <h3 className="text-lg font-semibold mb-2 flex items-center">
+                              <Ticket className="h-5 w-5 mr-2 text-primary" />
+                              Active Vouchers
+                            </h3>
+                            <div className="space-y-2">
+                              {cafe.vouchers.map((voucher, idx) => (
+                                <Card key={idx} className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
+                                  <CardContent className="pt-3 pb-3">
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex-1">
+                                        <h4 className="font-medium text-sm">{voucher.title}</h4>
+                                        <p className="text-xs text-muted-foreground">{voucher.description}</p>
+                                      </div>
+                                      <Badge variant="secondary" className="text-xs">
+                                        {voucher.type === 'discount' && 'Discount'}
+                                        {voucher.type === 'freebie' && 'Free'}
+                                        {voucher.type === 'bogo' && 'BOGO'}
+                                      </Badge>
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Discounts */}
+                        {cafe.discounts && cafe.discounts.length > 0 && (
+                          <div>
+                            <h3 className="text-lg font-semibold mb-2 flex items-center">
+                              <Tag className="h-5 w-5 mr-2 text-primary" />
+                              Special Offers
+                            </h3>
+                            <div className="space-y-2">
+                              {cafe.discounts.map((discount, idx) => (
+                                <Card key={idx} className="bg-muted/50">
+                                  <CardContent className="pt-3 pb-3">
+                                    <h4 className="font-medium text-sm">{discount.title}</h4>
+                                    <p className="text-xs text-muted-foreground">{discount.description}</p>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                         
                         {/* Directions */}
                         <Button 
