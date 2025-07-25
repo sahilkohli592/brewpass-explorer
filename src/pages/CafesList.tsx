@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Coffee, ArrowRight, Phone, Map, Star, ThumbsUp, Tag, Ticket } from 'lucide-react';
+import { Search, MapPin, Coffee, ArrowRight, Phone, Map, Star, ThumbsUp, Tag, Ticket, Heart, Clock, Filter, User, MessageCircle } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 // Dummy data - would come from an API in a real app
 const cafesData = [
@@ -29,6 +31,12 @@ const cafesData = [
     rating: 4.8,
     menu: ["Espresso", "Cappuccino", "Pour Over", "Cold Brew", "Snacks"],
     recommended: ["House Special Pour Over", "Blueberry Cheesecake"],
+    hours: { open: "06:00", close: "22:00", isOpen: true },
+    cuisine: "Coffee & Pastries",
+    reviews: [
+      { id: 1, user: "Rahul S.", rating: 5, comment: "Amazing coffee quality! Best pour over in the city.", date: "2024-01-15" },
+      { id: 2, user: "Priya M.", rating: 4, comment: "Great ambiance, perfect for work meetings.", date: "2024-01-10" }
+    ],
     vouchers: [
       { id: "V001", title: "20% Off First Order", description: "Get 20% off on your first purchase", type: "discount" },
       { id: "V002", title: "Free Coffee", description: "Buy 3 coffees, get 1 free", type: "freebie" }
@@ -52,6 +60,11 @@ const cafesData = [
     rating: 4.5,
     menu: ["Latte", "Flat White", "Americano", "Croissants", "Cakes"],
     recommended: ["Signature Flat White", "Chocolate Croissant"],
+    hours: { open: "07:00", close: "23:00", isOpen: true },
+    cuisine: "Specialty Coffee",
+    reviews: [
+      { id: 3, user: "Amit K.", rating: 5, comment: "Love their flat white! Consistently good.", date: "2024-01-12" }
+    ],
     vouchers: [
       { id: "V003", title: "₹50 Off", description: "₹50 off on orders above ₹300", type: "discount" }
     ],
@@ -74,6 +87,11 @@ const cafesData = [
     rating: 4.2,
     menu: ["Frappuccino", "Cold Brew", "Latte", "Macchiato", "Sandwiches"],
     recommended: ["Java Chip Frappuccino", "Protein Box"],
+    hours: { open: "06:30", close: "24:00", isOpen: true },
+    cuisine: "International Coffee",
+    reviews: [
+      { id: 4, user: "Sneha R.", rating: 4, comment: "Good for quick meetings, reliable chain.", date: "2024-01-08" }
+    ],
     vouchers: [
       { id: "V004", title: "Happy Hour", description: "Buy 1 Get 1 on all frappuccinos (3-5 PM)", type: "bogo" },
       { id: "V005", title: "Loyalty Reward", description: "Free drink on your 10th visit", type: "freebie" }
@@ -96,6 +114,11 @@ const cafesData = [
     rating: 4.7,
     menu: ["Pour Over", "Aeropress", "Espresso", "Breakfast", "Lunch"],
     recommended: ["Ethiopian Single Origin", "Avocado Toast"],
+    hours: { open: "08:00", close: "20:00", isOpen: false },
+    cuisine: "Artisan Coffee",
+    reviews: [
+      { id: 5, user: "Vikram T.", rating: 5, comment: "Best single origin coffee in the city!", date: "2024-01-14" }
+    ],
     vouchers: [
       { id: "V006", title: "Coffee Bean Discount", description: "30% off on all coffee beans", type: "discount" }
     ],
@@ -118,6 +141,11 @@ const cafesData = [
     rating: 4.0,
     menu: ["Devil's Own", "Tropical Iceberg", "Sandwiches", "Desserts"],
     recommended: ["Devil's Own", "Choco Fantasy"],
+    hours: { open: "08:00", close: "23:00", isOpen: true },
+    cuisine: "Indian Coffee",
+    reviews: [
+      { id: 6, user: "Anjali P.", rating: 4, comment: "Great value for money, love the cold coffees.", date: "2024-01-09" }
+    ],
     vouchers: [
       { id: "V007", title: "CCD Special", description: "₹100 off on orders above ₹500", type: "discount" }
     ],
@@ -140,6 +168,11 @@ const cafesData = [
     rating: 4.6,
     menu: ["Filter Coffee", "French Press", "Muffins", "Cookies"],
     recommended: ["Araku Signature Filter Coffee", "Chocolate Chip Cookie"],
+    hours: { open: "07:30", close: "21:30", isOpen: true },
+    cuisine: "Traditional Indian",
+    reviews: [
+      { id: 7, user: "Karthik N.", rating: 5, comment: "Authentic filter coffee taste, reminds me of home.", date: "2024-01-11" }
+    ],
     vouchers: [
       { id: "V008", title: "Filter Coffee Special", description: "Buy 2 filter coffees, get 1 free", type: "bogo" }
     ],
@@ -158,16 +191,32 @@ const CafesList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCafes, setFilteredCafes] = useState(cafesData);
   const [selectedCafe, setSelectedCafe] = useState<typeof cafesData[0] | null>(null);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [ratingFilter, setRatingFilter] = useState("all");
+  const [cuisineFilter, setCuisineFilter] = useState("all");
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [newReview, setNewReview] = useState({ rating: 5, comment: "" });
 
   useEffect(() => {
-    // Filter cafes based on search term
-    const results = cafesData.filter(cafe =>
+    let results = cafesData.filter(cafe =>
       cafe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cafe.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
       cafe.specialty.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Apply rating filter
+    if (ratingFilter !== "all") {
+      const minRating = parseFloat(ratingFilter);
+      results = results.filter(cafe => cafe.rating >= minRating);
+    }
+
+    // Apply cuisine filter
+    if (cuisineFilter !== "all") {
+      results = results.filter(cafe => cafe.cuisine === cuisineFilter);
+    }
+
     setFilteredCafes(results);
-  }, [searchTerm]);
+  }, [searchTerm, ratingFilter, cuisineFilter]);
 
   const handleViewDetails = (cafe: typeof cafesData[0]) => {
     setSelectedCafe(cafe);
@@ -175,6 +224,28 @@ const CafesList = () => {
 
   const handleOpenDirections = (lat: number, lng: number) => {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+  };
+
+  const toggleFavorite = (cafeId: number) => {
+    setFavorites(prev => 
+      prev.includes(cafeId) 
+        ? prev.filter(id => id !== cafeId)
+        : [...prev, cafeId]
+    );
+  };
+
+  const handleSubmitReview = () => {
+    if (selectedCafe && newReview.comment.trim()) {
+      // In a real app, this would send to backend
+      console.log('Submitting review:', { cafeId: selectedCafe.id, ...newReview });
+      setShowReviewForm(false);
+      setNewReview({ rating: 5, comment: "" });
+    }
+  };
+
+  const getUniqueValues = (key: string) => {
+    const values = cafesData.map(cafe => cafe[key as keyof typeof cafe]);
+    return [...new Set(values)];
   };
 
   const renderStars = (rating: number) => {
@@ -215,9 +286,9 @@ const CafesList = () => {
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative max-w-xl mx-auto mb-12 animate-slide-up">
-          <div className="relative">
+        {/* Search & Filters */}
+        <div className="max-w-4xl mx-auto mb-12 animate-slide-up">
+          <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
@@ -226,6 +297,37 @@ const CafesList = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+          </div>
+          
+          <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Filters:</span>
+            </div>
+            
+            <Select value={ratingFilter} onValueChange={setRatingFilter}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Rating" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Ratings</SelectItem>
+                <SelectItem value="4.5">4.5+ Stars</SelectItem>
+                <SelectItem value="4.0">4.0+ Stars</SelectItem>
+                <SelectItem value="3.5">3.5+ Stars</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={cuisineFilter} onValueChange={setCuisineFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Cuisine" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Cuisines</SelectItem>
+                {getUniqueValues('cuisine').map((cuisine, index) => (
+                  <SelectItem key={index} value={cuisine as string}>{cuisine as string}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -246,6 +348,25 @@ const CafesList = () => {
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     loading="lazy"
                   />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(cafe.id);
+                    }}
+                  >
+                    <Heart 
+                      className={`h-4 w-4 ${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
+                    />
+                  </Button>
+                  <div className="absolute bottom-2 left-2">
+                    <Badge variant={cafe.hours.isOpen ? "default" : "secondary"} className="text-xs">
+                      <Clock className="h-3 w-3 mr-1" />
+                      {cafe.hours.isOpen ? 'Open' : 'Closed'}
+                    </Badge>
+                  </div>
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2">{cafe.name}</h3>
@@ -261,9 +382,16 @@ const CafesList = () => {
                     <Phone className="w-4 h-4 mr-1" />
                     <span>{cafe.phone}</span>
                   </div>
+                  <div className="flex items-center justify-between text-sm text-foreground/70 mb-2">
+                    <div className="flex items-center">
+                      {renderStars(cafe.rating)}
+                      <span className="ml-2">{cafe.rating.toFixed(1)}</span>
+                    </div>
+                    <span className="text-xs">({cafe.reviews.length} reviews)</span>
+                  </div>
                   <div className="flex items-center text-sm text-foreground/70 mb-4">
-                    {renderStars(cafe.rating)}
-                    <span className="ml-2">{cafe.rating.toFixed(1)}</span>
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>{cafe.hours.open} - {cafe.hours.close}</span>
                   </div>
                   
                   <Dialog>
@@ -285,10 +413,22 @@ const CafesList = () => {
                       </DialogHeader>
                       
                       <div className="space-y-4 mt-4">
-                        {/* Rating */}
-                        <div className="flex items-center space-x-2">
-                          <div className="flex">{renderStars(cafe.rating)}</div>
-                          <span className="font-medium">{cafe.rating.toFixed(1)}</span>
+                        {/* Rating & Hours */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex">{renderStars(cafe.rating)}</div>
+                            <span className="font-medium">{cafe.rating.toFixed(1)}</span>
+                            <span className="text-sm text-muted-foreground">({cafe.reviews.length} reviews)</span>
+                          </div>
+                          <Badge variant={cafe.hours.isOpen ? "default" : "secondary"}>
+                            <Clock className="h-3 w-3 mr-1" />
+                            {cafe.hours.isOpen ? 'Open' : 'Closed'}
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Clock className="h-4 w-4 mr-2" />
+                          <span>Hours: {cafe.hours.open} - {cafe.hours.close}</span>
                         </div>
                         
                         {/* Contact */}
@@ -380,14 +520,102 @@ const CafesList = () => {
                           </div>
                         )}
                         
-                        {/* Directions */}
-                        <Button 
-                          className="w-full" 
-                          onClick={() => handleOpenDirections(cafe.location.lat, cafe.location.lng)}
-                        >
-                          <Map className="h-4 w-4 mr-2" />
-                          Get Directions
-                        </Button>
+                        {/* Reviews */}
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-lg font-semibold flex items-center">
+                              <MessageCircle className="h-5 w-5 mr-2 text-primary" />
+                              Reviews ({cafe.reviews.length})
+                            </h3>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setShowReviewForm(!showReviewForm)}
+                            >
+                              Write Review
+                            </Button>
+                          </div>
+                          
+                          {showReviewForm && (
+                            <Card className="mb-4 bg-muted/50">
+                              <CardContent className="pt-4">
+                                <div className="space-y-3">
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-sm font-medium">Rating:</span>
+                                    <div className="flex space-x-1">
+                                      {[1, 2, 3, 4, 5].map(rating => (
+                                        <Star
+                                          key={rating}
+                                          className={`h-4 w-4 cursor-pointer ${
+                                            rating <= newReview.rating 
+                                              ? 'fill-yellow-400 text-yellow-400' 
+                                              : 'text-gray-300'
+                                          }`}
+                                          onClick={() => setNewReview(prev => ({ ...prev, rating }))}
+                                        />
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <Textarea
+                                    placeholder="Share your experience..."
+                                    value={newReview.comment}
+                                    onChange={(e) => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
+                                    className="resize-none"
+                                    rows={3}
+                                  />
+                                  <div className="flex space-x-2">
+                                    <Button size="sm" onClick={handleSubmitReview}>
+                                      Submit Review
+                                    </Button>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm" 
+                                      onClick={() => setShowReviewForm(false)}
+                                    >
+                                      Cancel
+                                    </Button>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          )}
+                          
+                          <div className="space-y-3 max-h-48 overflow-y-auto">
+                            {cafe.reviews.map((review) => (
+                              <Card key={review.id} className="bg-muted/30">
+                                <CardContent className="pt-3 pb-3">
+                                  <div className="flex items-center justify-between mb-2">
+                                    <span className="font-medium text-sm">{review.user}</span>
+                                    <span className="text-xs text-muted-foreground">{review.date}</span>
+                                  </div>
+                                  <div className="flex items-center mb-2">
+                                    {renderStars(review.rating)}
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">{review.comment}</p>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Actions */}
+                        <div className="flex space-x-2">
+                          <Button 
+                            className="flex-1" 
+                            onClick={() => handleOpenDirections(cafe.location.lat, cafe.location.lng)}
+                          >
+                            <Map className="h-4 w-4 mr-2" />
+                            Directions
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => toggleFavorite(cafe.id)}
+                          >
+                            <Heart 
+                              className={`h-4 w-4 ${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : ''}`} 
+                            />
+                          </Button>
+                        </div>
                       </div>
                     </DialogContent>
                   </Dialog>
