@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Coffee, ArrowRight, Phone, Map, Star, ThumbsUp, Tag, Ticket, Heart, Clock, Filter, User, MessageCircle } from 'lucide-react';
+import { Search, MapPin, Coffee, ArrowRight, Phone, Map, Star, ThumbsUp, Tag, Ticket, Heart, Clock, Filter, User, MessageCircle, Gift } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import ReviewDialog from '@/components/ReviewDialog';
+import { useToast } from '@/hooks/use-toast';
 
 // Dummy data - would come from an API in a real app
 const cafesData = [
@@ -196,6 +198,10 @@ const CafesList = () => {
   const [cuisineFilter, setCuisineFilter] = useState("all");
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 5, comment: "" });
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [userBalance] = useState({ drinks: 5, points: 1250 }); // Mock user balance
+  const { toast } = useToast();
 
   useEffect(() => {
     let results = cafesData.filter(cafe =>
@@ -241,6 +247,35 @@ const CafesList = () => {
       setShowReviewForm(false);
       setNewReview({ rating: 5, comment: "" });
     }
+  };
+
+  const handleRedeemDrink = () => {
+    if (userBalance.drinks <= 0) {
+      toast({
+        title: "No drinks available",
+        description: "You don't have any drinks to redeem. Purchase a BrewPass to get started!",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsRedeeming(true);
+    // Simulate redemption process
+    setTimeout(() => {
+      setIsRedeeming(false);
+      setShowReviewDialog(true);
+    }, 2000);
+  };
+
+  const handleReviewSubmit = (rating: number, comment: string) => {
+    setShowReviewDialog(false);
+    toast({
+      title: "Drink Redeemed Successfully!",
+      description: `Thank you for your ${rating}-star review. Enjoy your free drink!`,
+    });
+    
+    // In a real app, this would update the backend and refresh user balance
+    console.log('Redemption review submitted:', { cafeId: selectedCafe?.id, rating, comment });
   };
 
   const getUniqueValues = (key: string) => {
@@ -598,23 +633,63 @@ const CafesList = () => {
                           </div>
                         </div>
                         
+                        {/* User Balance Display */}
+                        <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/20">
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-semibold text-sm">Your BrewPass Balance</h3>
+                            <Gift className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm text-muted-foreground">
+                              Free drinks available: <span className="font-bold text-primary">{userBalance.drinks}</span>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              Points: <span className="font-bold text-primary">{userBalance.points}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
                         {/* Actions */}
-                        <div className="flex space-x-2">
-                          <Button 
-                            className="flex-1" 
-                            onClick={() => handleOpenDirections(cafe.location.lat, cafe.location.lng)}
-                          >
-                            <Map className="h-4 w-4 mr-2" />
-                            Directions
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => toggleFavorite(cafe.id)}
-                          >
-                            <Heart 
-                              className={`h-4 w-4 ${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : ''}`} 
-                            />
-                          </Button>
+                        <div className="space-y-3">
+                          {/* Redeem Button */}
+                          {cafe.hours.isOpen && (
+                            <Button 
+                              className="w-full" 
+                              onClick={handleRedeemDrink}
+                              disabled={isRedeeming || userBalance.drinks <= 0}
+                            >
+                              {isRedeeming ? (
+                                <>
+                                  <div className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full" />
+                                  Processing...
+                                </>
+                              ) : (
+                                <>
+                                  <Gift className="h-4 w-4 mr-2" />
+                                  {userBalance.drinks > 0 ? 'Redeem Free Drink' : 'No Drinks Available'}
+                                </>
+                              )}
+                            </Button>
+                          )}
+                          
+                          <div className="flex space-x-2">
+                            <Button 
+                              variant="outline"
+                              className="flex-1" 
+                              onClick={() => handleOpenDirections(cafe.location.lat, cafe.location.lng)}
+                            >
+                              <Map className="h-4 w-4 mr-2" />
+                              Directions
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => toggleFavorite(cafe.id)}
+                            >
+                              <Heart 
+                                className={`h-4 w-4 ${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : ''}`} 
+                              />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </DialogContent>
@@ -630,6 +705,13 @@ const CafesList = () => {
             </div>
           )}
         </div>
+        
+        <ReviewDialog
+          open={showReviewDialog}
+          onOpenChange={setShowReviewDialog}
+          onSubmitReview={handleReviewSubmit}
+          cafeName={selectedCafe?.name}
+        />
       </div>
     </BlurredBackground>
   );
