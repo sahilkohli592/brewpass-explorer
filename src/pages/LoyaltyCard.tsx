@@ -6,10 +6,15 @@ import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import ReviewDialog from '@/components/ReviewDialog';
+import { useToast } from '@/hooks/use-toast';
 
 const LoyaltyCard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [animation, setAnimation] = useState('');
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const { toast } = useToast();
 
   // Mock data - in a real app, this would come from an API
   const userCard = {
@@ -35,6 +40,26 @@ const LoyaltyCard = () => {
     // In a real app, implement sharing functionality
     // For now, just show a simple alert
     alert("Sharing functionality would be implemented here!");
+  };
+
+  const handleRedeem = () => {
+    setIsRedeeming(true);
+    // Simulate redemption process
+    setTimeout(() => {
+      setIsRedeeming(false);
+      setShowReviewDialog(true);
+    }, 1500);
+  };
+
+  const handleReviewSubmit = (rating: number, comment: string) => {
+    setShowReviewDialog(false);
+    toast({
+      title: "Review Submitted!",
+      description: `Thank you for your ${rating}-star review. Your drink has been redeemed successfully!`,
+    });
+    
+    // In a real app, this would update the backend and refresh the card data
+    console.log('Review submitted:', { rating, comment });
   };
 
   // Calculate progress percentage
@@ -115,9 +140,22 @@ const LoyaltyCard = () => {
                   <Share className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
                   Share Pass
                 </Button>
-                <Button className="flex-1 group">
-                  <QrCode className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                  Redeem
+                <Button 
+                  className="flex-1 group" 
+                  onClick={handleRedeem}
+                  disabled={isRedeeming}
+                >
+                  {isRedeeming ? (
+                    <>
+                      <div className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full" />
+                      Redeeming...
+                    </>
+                  ) : (
+                    <>
+                      <QrCode className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                      Redeem
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
@@ -132,6 +170,13 @@ const LoyaltyCard = () => {
             View Help Center
           </Button>
         </div>
+        
+        <ReviewDialog
+          open={showReviewDialog}
+          onOpenChange={setShowReviewDialog}
+          onSubmitReview={handleReviewSubmit}
+          cafeName="Partner Café"
+        />
       </div>
     </BlurredBackground>
   );
