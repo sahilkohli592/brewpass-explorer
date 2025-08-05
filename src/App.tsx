@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Payment from "./pages/Payment";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserProfile from "./components/UserProfile";
+import DineOut from "./pages/DineOut";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/cafes" element={<CafesList />} />
               <Route path="/loyalty-card" element={<LoyaltyCard />} />
               <Route path="/referral" element={<ReferralProgram />} />
+              <Route path="/dineout" element={<DineOut />} />
               <Route path="/login" element={<Login />} />
               <Route path="/payment" element={<Payment />} />
               <Route path="/admin" element={<AdminDashboard />} />
