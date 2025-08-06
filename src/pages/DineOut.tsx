@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Calendar, Clock, Users, MapPin, Star, Utensils, Gift, CheckCircle, Phone } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, Users, MapPin, Star, Utensils, Gift, CheckCircle, Phone, Filter, Heart, Share2, Camera, Wifi, Car, Music, CreditCard, Timer, TrendingUp, Award, Shield } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import TableBookingForm from '@/components/dineout/TableBookingForm';
+import PreOrderMenu from '@/components/dineout/PreOrderMenu';
 
 const dineoutDeals = [
   {
@@ -18,16 +20,32 @@ const dineoutDeals = [
     image: "https://source.unsplash.com/random/400x250/?restaurant,dining",
     cuisine: "Coffee & Continental",
     rating: 4.8,
+    reviewCount: 1205,
     location: "Khan Market, New Delhi",
+    distance: "2.3 km",
     originalPrice: 800,
     dineoutPrice: 600,
     discount: 25,
     offer: "25% off total bill",
     validUntil: "2024-12-31",
     features: ["Table Booking", "Pre-order", "Live Music"],
+    amenities: ["WiFi", "Parking", "AC", "Card Payment"],
     timeSlots: ["12:00 PM", "2:00 PM", "6:00 PM", "8:00 PM"],
     availableTables: 8,
-    phone: "+91 98765 43210"
+    phone: "+91 98765 43210",
+    status: "Open",
+    isLiked: false,
+    images: [
+      "https://source.unsplash.com/random/400x250/?restaurant,dining",
+      "https://source.unsplash.com/random/400x250/?coffee,interior",
+      "https://source.unsplash.com/random/400x250/?food,restaurant"
+    ],
+    popularDishes: ["Espresso", "Avocado Toast", "Croissant"],
+    happyHours: "4:00 PM - 7:00 PM",
+    averageTime: "45 mins",
+    costForTwo: "₹800",
+    safetyBadge: true,
+    trending: true
   },
   {
     id: 2,
@@ -35,16 +53,32 @@ const dineoutDeals = [
     image: "https://source.unsplash.com/random/400x250/?cafe,interior",
     cuisine: "Italian & Mexican",
     rating: 4.6,
+    reviewCount: 892,
     location: "CP, New Delhi",
+    distance: "1.8 km",
     originalPrice: 1200,
     dineoutPrice: 900,
     discount: 25,
     offer: "Buy 1 Get 1 on beverages",
     validUntil: "2024-12-31",
     features: ["Rooftop Seating", "Wi-Fi", "Pet Friendly"],
+    amenities: ["WiFi", "Rooftop", "Pet Friendly", "Live Music"],
     timeSlots: ["11:00 AM", "1:00 PM", "5:00 PM", "7:00 PM"],
     availableTables: 12,
-    phone: "+91 87654 32109"
+    phone: "+91 87654 32109",
+    status: "Open",
+    isLiked: true,
+    images: [
+      "https://source.unsplash.com/random/400x250/?cafe,interior",
+      "https://source.unsplash.com/random/400x250/?rooftop,dining",
+      "https://source.unsplash.com/random/400x250/?pizza,pasta"
+    ],
+    popularDishes: ["Margherita Pizza", "Pasta Alfredo", "Mojito"],
+    happyHours: "5:00 PM - 8:00 PM",
+    averageTime: "35 mins",
+    costForTwo: "₹1200",
+    safetyBadge: true,
+    trending: false
   },
   {
     id: 3,
@@ -52,16 +86,32 @@ const dineoutDeals = [
     image: "https://source.unsplash.com/random/400x250/?coffee,brunch",
     cuisine: "Continental & Asian",
     rating: 4.7,
+    reviewCount: 756,
     location: "GK-1, New Delhi",
+    distance: "3.1 km",
     originalPrice: 1000,
     dineoutPrice: 750,
     discount: 25,
     offer: "Free dessert with main course",
     validUntil: "2024-12-31",
     features: ["Outdoor Seating", "Brunch Menu", "Parking"],
+    amenities: ["Parking", "Outdoor Seating", "Brunch", "AC"],
     timeSlots: ["10:00 AM", "12:30 PM", "3:00 PM", "6:30 PM"],
     availableTables: 6,
-    phone: "+91 76543 21098"
+    phone: "+91 76543 21098",
+    status: "Busy",
+    isLiked: false,
+    images: [
+      "https://source.unsplash.com/random/400x250/?coffee,brunch",
+      "https://source.unsplash.com/random/400x250/?outdoor,dining",
+      "https://source.unsplash.com/random/400x250/?dessert,cake"
+    ],
+    popularDishes: ["Eggs Benedict", "French Toast", "Cold Brew"],
+    happyHours: "3:00 PM - 6:00 PM",
+    averageTime: "40 mins",
+    costForTwo: "₹1000",
+    safetyBadge: true,
+    trending: true
   }
 ];
 
@@ -74,6 +124,12 @@ const DineOut = () => {
   const [searchLocation, setSearchLocation] = useState('');
   const [preOrderItems, setPreOrderItems] = useState([]);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedCuisine, setSelectedCuisine] = useState('all');
+  const [selectedPriceRange, setSelectedPriceRange] = useState('all');
+  const [sortBy, setSortBy] = useState('rating');
+  const [likedRestaurants, setLikedRestaurants] = useState(new Set([2]));
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toast } = useToast();
 
   const menuItems = [
@@ -142,119 +198,344 @@ const DineOut = () => {
     return `${hoursUntil}h`;
   };
 
+  const toggleLike = (restaurantId) => {
+    const newLiked = new Set(likedRestaurants);
+    if (newLiked.has(restaurantId)) {
+      newLiked.delete(restaurantId);
+    } else {
+      newLiked.add(restaurantId);
+    }
+    setLikedRestaurants(newLiked);
+    toast({
+      title: newLiked.has(restaurantId) ? "Added to Favorites ❤️" : "Removed from Favorites",
+      description: newLiked.has(restaurantId) ? "Restaurant saved to your favorites" : "Restaurant removed from favorites",
+    });
+  };
+
+  const shareRestaurant = (restaurant) => {
+    if (navigator.share) {
+      navigator.share({
+        title: restaurant.restaurant,
+        text: `Check out ${restaurant.restaurant} - ${restaurant.offer}`,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link Copied! 📋",
+        description: "Restaurant link copied to clipboard",
+      });
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Open': return 'text-green-600 bg-green-100';
+      case 'Busy': return 'text-orange-600 bg-orange-100';
+      case 'Closed': return 'text-red-600 bg-red-100';
+      default: return 'text-muted-foreground bg-muted';
+    }
+  };
+
+  const getAmenityIcon = (amenity) => {
+    switch (amenity) {
+      case 'WiFi': return <Wifi className="w-3 h-3" />;
+      case 'Parking': return <Car className="w-3 h-3" />;
+      case 'Live Music': return <Music className="w-3 h-3" />;
+      case 'Card Payment': return <CreditCard className="w-3 h-3" />;
+      default: return <CheckCircle className="w-3 h-3" />;
+    }
+  };
+
+  const filteredDeals = dineoutDeals.filter(deal => {
+    const matchesSearch = deal.restaurant.toLowerCase().includes(searchLocation.toLowerCase()) ||
+                         deal.location.toLowerCase().includes(searchLocation.toLowerCase()) ||
+                         deal.cuisine.toLowerCase().includes(searchLocation.toLowerCase());
+    const matchesCuisine = selectedCuisine === 'all' || deal.cuisine.toLowerCase().includes(selectedCuisine);
+    const matchesPrice = selectedPriceRange === 'all' || 
+                        (selectedPriceRange === 'budget' && deal.dineoutPrice < 600) ||
+                        (selectedPriceRange === 'mid' && deal.dineoutPrice >= 600 && deal.dineoutPrice <= 1000) ||
+                        (selectedPriceRange === 'premium' && deal.dineoutPrice > 1000);
+    
+    return matchesSearch && matchesCuisine && matchesPrice;
+  });
+
+  const sortedDeals = [...filteredDeals].sort((a, b) => {
+    switch (sortBy) {
+      case 'rating': return b.rating - a.rating;
+      case 'price-low': return a.dineoutPrice - b.dineoutPrice;
+      case 'price-high': return b.dineoutPrice - a.dineoutPrice;
+      case 'distance': return parseFloat(a.distance) - parseFloat(b.distance);
+      case 'discount': return b.discount - a.discount;
+      default: return 0;
+    }
+  });
+
+  // Auto-advance image carousel
+  useEffect(() => {
+    if (selectedRestaurant && selectedRestaurant.images) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => 
+          prev === selectedRestaurant.images.length - 1 ? 0 : prev + 1
+        );
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [selectedRestaurant]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
       <BlurredBackground>
         <div /></BlurredBackground>
       
       <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             DineOut Deals
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
             Book tables, get amazing deals, and enjoy seamless dining experiences
           </p>
           
-          {/* Search and Filter Bar */}
-          <div className="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto mb-8">
-            <Input
-              placeholder="Search by location, restaurant, or cuisine"
-              value={searchLocation}
-              onChange={(e) => setSearchLocation(e.target.value)}
-              className="flex-1"
-            />
-            <Select>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Cuisine Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Cuisines</SelectItem>
-                <SelectItem value="coffee">Coffee & Cafe</SelectItem>
-                <SelectItem value="italian">Italian</SelectItem>
-                <SelectItem value="continental">Continental</SelectItem>
-                <SelectItem value="asian">Asian</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-full md:w-32">
-                <SelectValue placeholder="People" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1 Person</SelectItem>
-                <SelectItem value="2">2 People</SelectItem>
-                <SelectItem value="3">3 People</SelectItem>
-                <SelectItem value="4">4 People</SelectItem>
-                <SelectItem value="5+">5+ People</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Enhanced Search and Filter Bar */}
+          <div className="flex flex-col gap-4 max-w-6xl mx-auto mb-8">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Input
+                  placeholder="Search restaurants, cuisine, or location..."
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  className="pl-10"
+                />
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className="md:w-auto w-full"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filters
+              </Button>
+            </div>
+            
+            {/* Filter Row */}
+            {showFilters && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-card rounded-lg border animate-fade-in">
+                <Select value={selectedCuisine} onValueChange={setSelectedCuisine}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Cuisine" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Cuisines</SelectItem>
+                    <SelectItem value="coffee">Coffee & Cafe</SelectItem>
+                    <SelectItem value="italian">Italian</SelectItem>
+                    <SelectItem value="continental">Continental</SelectItem>
+                    <SelectItem value="asian">Asian</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select value={selectedPriceRange} onValueChange={setSelectedPriceRange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Price Range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Prices</SelectItem>
+                    <SelectItem value="budget">Budget (Under ₹600)</SelectItem>
+                    <SelectItem value="mid">Mid-range (₹600-₹1000)</SelectItem>
+                    <SelectItem value="premium">Premium (Above ₹1000)</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rating">Rating</SelectItem>
+                    <SelectItem value="distance">Distance</SelectItem>
+                    <SelectItem value="price-low">Price: Low to High</SelectItem>
+                    <SelectItem value="price-high">Price: High to Low</SelectItem>
+                    <SelectItem value="discount">Best Discount</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select value={partySize} onValueChange={setPartySize}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Party Size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 Person</SelectItem>
+                    <SelectItem value="2">2 People</SelectItem>
+                    <SelectItem value="3">3 People</SelectItem>
+                    <SelectItem value="4">4 People</SelectItem>
+                    <SelectItem value="5+">5+ People</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
         </div>
 
         {bookingStep === 'browse' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dineoutDeals.map((deal) => (
-              <GlassmorphicCard key={deal.id} className="group hover:scale-105 transition-all duration-300">
-                <div className="relative overflow-hidden rounded-t-lg">
+            {sortedDeals.map((deal) => (
+              <GlassmorphicCard key={deal.id} className="group hover:scale-[1.02] transition-all duration-300 overflow-hidden">
+                <div className="relative overflow-hidden">
                   <img 
                     src={deal.image} 
                     alt={deal.restaurant}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 left-4">
-                    <Badge variant="secondary" className="bg-green-500/90 text-white">
+                  
+                  {/* Top badges */}
+                  <div className="absolute top-3 left-3 flex flex-col gap-2">
+                    <Badge className="bg-accent text-accent-foreground font-semibold shadow-lg">
                       {deal.discount}% OFF
                     </Badge>
+                    {deal.trending && (
+                      <Badge className="bg-red-500 text-white font-semibold shadow-lg">
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        Trending
+                      </Badge>
+                    )}
                   </div>
-                  <div className="absolute top-4 right-4">
-                    <Badge variant="outline" className="bg-white/90 text-primary">
-                      <Star className="w-3 h-3 mr-1 fill-current" />
+                  
+                  {/* Top right icons */}
+                  <div className="absolute top-3 right-3 flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(deal.id);
+                        }}
+                      >
+                        <Heart 
+                          className={`w-4 h-4 ${likedRestaurants.has(deal.id) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
+                        />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          shareRestaurant(deal);
+                        }}
+                      >
+                        <Share2 className="w-4 h-4 text-muted-foreground" />
+                      </Button>
+                    </div>
+                    <Badge variant="outline" className="bg-white/95 text-primary border-primary/20">
+                      <Star className="w-3 h-3 mr-1 fill-current text-amber-500" />
                       {deal.rating}
+                    </Badge>
+                  </div>
+                  
+                  {/* Status badge */}
+                  <div className="absolute bottom-3 left-3">
+                    <Badge className={`${getStatusColor(deal.status)} border-0 font-medium`}>
+                      <div className={`w-2 h-2 rounded-full mr-2 ${deal.status === 'Open' ? 'bg-green-500' : deal.status === 'Busy' ? 'bg-orange-500' : 'bg-red-500'}`} />
+                      {deal.status}
                     </Badge>
                   </div>
                 </div>
                 
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{deal.restaurant}</h3>
-                  <p className="text-muted-foreground mb-2 flex items-center">
-                    <Utensils className="w-4 h-4 mr-2" />
-                    {deal.cuisine}
-                  </p>
-                  <p className="text-muted-foreground mb-4 flex items-center">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    {deal.location}
-                  </p>
-                  
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-2xl font-bold text-green-600">₹{deal.dineoutPrice}</span>
-                    <span className="text-lg text-muted-foreground line-through">₹{deal.originalPrice}</span>
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold mb-1 flex items-center gap-2">
+                        {deal.restaurant}
+                        {deal.safetyBadge && (
+                          <Shield className="w-4 h-4 text-green-600" />
+                        )}
+                      </h3>
+                      <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Utensils className="w-3 h-3" />
+                        {deal.cuisine}
+                      </p>
+                    </div>
                   </div>
                   
+                  <div className="space-y-3 mb-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="flex items-center text-muted-foreground">
+                        <MapPin className="w-3 h-3 mr-1" />
+                        {deal.location}
+                      </span>
+                      <span className="text-muted-foreground">{deal.distance}</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="flex items-center text-muted-foreground">
+                        <Timer className="w-3 h-3 mr-1" />
+                        {deal.averageTime}
+                      </span>
+                      <span className="text-muted-foreground">{deal.costForTwo} for two</span>
+                    </div>
+                    
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <span className="flex items-center">
+                        <Clock className="w-3 h-3 mr-1" />
+                        Happy Hours: {deal.happyHours}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Price section */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl font-bold text-green-600">₹{deal.dineoutPrice}</span>
+                    <span className="text-lg text-muted-foreground line-through">₹{deal.originalPrice}</span>
+                    <Badge variant="outline" className="text-green-600 border-green-200">
+                      Save ₹{deal.originalPrice - deal.dineoutPrice}
+                    </Badge>
+                  </div>
+                  
+                  {/* Offer section */}
                   <div className="mb-4">
-                    <p className="text-sm font-medium text-green-600 mb-2">
-                      <Gift className="w-4 h-4 inline mr-1" />
+                    <p className="text-sm font-medium text-accent mb-2 flex items-center">
+                      <Gift className="w-4 h-4 mr-1" />
                       {deal.offer}
                     </p>
-                    <div className="flex flex-wrap gap-1">
-                      {deal.features.map((feature, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {feature}
-                        </Badge>
+                    
+                    {/* Popular dishes */}
+                    <div className="mb-3">
+                      <p className="text-xs text-muted-foreground mb-1">Popular:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {deal.popularDishes.slice(0, 3).map((dish, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {dish}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Amenities */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {deal.amenities.slice(0, 4).map((amenity, index) => (
+                        <div key={index} className="flex items-center gap-1 text-xs text-muted-foreground">
+                          {getAmenityIcon(amenity)}
+                          <span>{amenity}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm text-muted-foreground">Available tables: {deal.availableTables}</span>
-                    <span className="text-sm text-muted-foreground">Valid till: {new Date(deal.validUntil).toLocaleDateString()}</span>
+                  {/* Reviews and availability */}
+                  <div className="flex items-center justify-between mb-4 text-sm">
+                    <span className="text-muted-foreground">{deal.reviewCount} reviews</span>
+                    <span className="text-muted-foreground">{deal.availableTables} tables available</span>
                   </div>
                   
                   <Button 
                     onClick={() => handleBookTable(deal)} 
-                    className="w-full"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
                     size="lg"
                   >
-                    Book Table
+                    Book Table Now
                   </Button>
                 </CardContent>
               </GlassmorphicCard>
@@ -263,7 +544,7 @@ const DineOut = () => {
         )}
 
         {bookingStep === 'book' && selectedRestaurant && (
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <Button 
               onClick={() => setBookingStep('browse')} 
               variant="outline" 
@@ -272,130 +553,123 @@ const DineOut = () => {
               ← Back to Restaurants
             </Button>
             
-            <GlassmorphicCard className="p-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h2 className="text-2xl font-bold mb-4">Book Your Table</h2>
-                  <div className="mb-6">
-                    <h3 className="font-semibold text-lg">{selectedRestaurant.restaurant}</h3>
-                    <p className="text-muted-foreground">{selectedRestaurant.location}</p>
-                    <p className="text-green-600 font-medium">{selectedRestaurant.offer}</p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Select Date</label>
-                      <Input
-                        type="date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        min={new Date().toISOString().split('T')[0]}
-                      />
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Restaurant Details Section */}
+              <div className="lg:col-span-1">
+                <GlassmorphicCard className="p-6 sticky top-6">
+                  <div className="relative mb-4">
+                    <img 
+                      src={selectedRestaurant.images[currentImageIndex]} 
+                      alt={selectedRestaurant.restaurant}
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg" />
+                    <div className="absolute bottom-3 left-3 text-white">
+                      <h3 className="font-semibold text-lg">{selectedRestaurant.restaurant}</h3>
+                      <p className="text-sm opacity-90">{selectedRestaurant.location}</p>
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Select Time</label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {selectedRestaurant.timeSlots.map((slot) => (
-                          <Button
-                            key={slot}
-                            variant={selectedTime === slot ? "default" : "outline"}
-                            onClick={() => setSelectedTime(slot)}
-                            className="text-sm"
-                          >
-                            {slot}
-                            <span className="text-xs ml-1">({getTimeUntilSlot(slot)})</span>
-                          </Button>
-                        ))}
+                    {/* Image indicators */}
+                    <div className="absolute bottom-3 right-3 flex gap-1">
+                      {selectedRestaurant.images.map((_, index) => (
+                        <div 
+                          key={index}
+                          className={`w-2 h-2 rounded-full ${index === currentImageIndex ? 'bg-white' : 'bg-white/50'}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Badge className="bg-accent text-accent-foreground">
+                        {selectedRestaurant.discount}% OFF
+                      </Badge>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4 text-amber-500 fill-current" />
+                        <span className="font-medium">{selectedRestaurant.rating}</span>
+                        <span className="text-sm text-muted-foreground">({selectedRestaurant.reviewCount})</span>
                       </div>
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Party Size</label>
-                      <Select value={partySize} onValueChange={setPartySize}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Number of people" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {[1,2,3,4,5,6,7,8].map(num => (
-                            <SelectItem key={num} value={num.toString()}>
-                              {num} {num === 1 ? 'Person' : 'People'}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    <div className="p-3 bg-accent/10 rounded-lg">
+                      <p className="text-accent font-medium flex items-center">
+                        <Gift className="w-4 h-4 mr-2" />
+                        {selectedRestaurant.offer}
+                      </p>
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Special Requests (Optional)</label>
-                      <Textarea placeholder="Any special requirements or dietary restrictions..." />
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Cost for two:</span>
+                        <span className="font-medium">{selectedRestaurant.costForTwo}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Happy Hours:</span>
+                        <span className="font-medium">{selectedRestaurant.happyHours}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Average Time:</span>
+                        <span className="font-medium">{selectedRestaurant.averageTime}</span>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">Pre-Order Menu</h3>
-                  <p className="text-muted-foreground mb-4">Save time by pre-ordering your favorites</p>
-                  
-                  <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {menuItems.map((item) => (
-                      <Card key={item.id} className="p-4">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h4 className="font-medium">{item.name}</h4>
-                            <p className="text-sm text-muted-foreground">{item.category}</p>
-                            <p className="font-semibold text-green-600">₹{item.price}</p>
-                          </div>
-                          <Button 
-                            size="sm" 
-                            onClick={() => handlePreOrder(item)}
-                            variant="outline"
-                          >
-                            Add
-                          </Button>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {selectedRestaurant.amenities.map((amenity, index) => (
+                        <div key={index} className="flex items-center gap-1 text-xs bg-muted px-2 py-1 rounded-full">
+                          {getAmenityIcon(amenity)}
+                          <span>{amenity}</span>
                         </div>
-                      </Card>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                  
-                  {preOrderItems.length > 0 && (
-                    <Card className="mt-4 p-4">
-                      <h4 className="font-medium mb-2">Pre-Order Summary</h4>
-                      <div className="space-y-1">
-                        {preOrderItems.map((item, index) => (
-                          <div key={index} className="flex justify-between text-sm">
-                            <span>{item.name}</span>
-                            <span>₹{item.price}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="border-t pt-2 mt-2">
-                        <div className="flex justify-between font-semibold">
-                          <span>Total Pre-Order:</span>
-                          <span>₹{preOrderItems.reduce((sum, item) => sum + item.price, 0)}</span>
-                        </div>
-                      </div>
-                    </Card>
-                  )}
-                </div>
+                </GlassmorphicCard>
               </div>
               
-              <div className="mt-8 pt-6 border-t">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <Button onClick={confirmBooking} className="flex-1" size="lg">
-                    Confirm Booking
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="flex-1"
-                    onClick={() => window.open(`tel:${selectedRestaurant.phone}`)}
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Restaurant
-                  </Button>
-                </div>
+              {/* Booking Form Section */}
+              <div className="lg:col-span-2">
+                <GlassmorphicCard className="p-8">
+                  <h2 className="text-2xl font-bold mb-6">Book Your Table</h2>
+                  
+                  <TableBookingForm
+                    selectedDate={selectedDate}
+                    setSelectedDate={setSelectedDate}
+                    selectedTime={selectedTime}
+                    setSelectedTime={setSelectedTime}
+                    partySize={partySize}
+                    setPartySize={setPartySize}
+                    restaurant={selectedRestaurant}
+                    onConfirm={confirmBooking}
+                    getTimeUntilSlot={getTimeUntilSlot}
+                  />
+                  
+                  <div className="mt-8 pt-6 border-t">
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => window.open(`tel:${selectedRestaurant.phone}`)}
+                      >
+                        <Phone className="w-4 h-4 mr-2" />
+                        Call Restaurant
+                      </Button>
+                    </div>
+                  </div>
+                </GlassmorphicCard>
               </div>
-            </GlassmorphicCard>
+              
+              {/* Pre-Order Section */}
+              <div className="lg:col-span-3">
+                <GlassmorphicCard className="p-8 mt-6">
+                  <PreOrderMenu
+                    restaurant={selectedRestaurant}
+                    preOrderItems={preOrderItems}
+                    setPreOrderItems={setPreOrderItems}
+                    onAddItem={handlePreOrder}
+                  />
+                </GlassmorphicCard>
+              </div>
+            </div>
           </div>
         )}
 
