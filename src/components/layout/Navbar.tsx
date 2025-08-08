@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Coffee, List, X, CreditCard, Users, LogIn, LayoutDashboard, User } from 'lucide-react';
+import { Coffee, List, X, CreditCard, Users, LogIn, LayoutDashboard, User, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Navbar = () => {
@@ -25,8 +25,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', path: '/', icon: <Coffee className="w-4 h-4" /> },
-    { name: 'Cafés', path: '/cafes', icon: <List className="w-4 h-4" /> },
-    { name: 'DineOut', path: '/dineout', icon: <CreditCard className="w-4 h-4" /> },
+    { name: 'Restaurants', path: '/dineout', icon: <Utensils className="w-4 h-4" /> },
     { name: 'My Pass', path: '/loyalty-card', icon: <CreditCard className="w-4 h-4" /> },
     { name: 'Refer', path: '/referral', icon: <Users className="w-4 h-4" /> },
     { name: 'Profile', path: '/profile', icon: <User className="w-4 h-4" /> },
