@@ -16,15 +16,15 @@ import PreOrderMenu from '@/components/dineout/PreOrderMenu';
 const dineoutDeals = [
   {
     id: 1,
-    restaurant: "Blue Tokai Coffee",
-    image: "https://source.unsplash.com/random/400x250/?restaurant,dining",
-    cuisine: "Coffee & Continental",
+    restaurant: "The Spice Route",
+    image: "https://source.unsplash.com/random/400x250/?indian,restaurant",
+    cuisine: "North Indian & Mughlai",
     rating: 4.8,
     reviewCount: 1205,
     location: "Khan Market, New Delhi",
     distance: "2.3 km",
-    originalPrice: 800,
-    dineoutPrice: 600,
+    originalPrice: 1400,
+    dineoutPrice: 1050,
     discount: 25,
     offer: "25% off total bill",
     validUntil: "2024-12-31",
@@ -36,80 +36,113 @@ const dineoutDeals = [
     status: "Open",
     isLiked: false,
     images: [
-      "https://source.unsplash.com/random/400x250/?restaurant,dining",
-      "https://source.unsplash.com/random/400x250/?coffee,interior",
-      "https://source.unsplash.com/random/400x250/?food,restaurant"
+      "https://source.unsplash.com/random/400x250/?indian,restaurant",
+      "https://source.unsplash.com/random/400x250/?curry,naan",
+      "https://source.unsplash.com/random/400x250/?tandoor,grill"
     ],
-    popularDishes: ["Espresso", "Avocado Toast", "Croissant"],
+    popularDishes: ["Butter Chicken", "Biryani", "Naan"],
     happyHours: "4:00 PM - 7:00 PM",
-    averageTime: "45 mins",
-    costForTwo: "₹800",
+    averageTime: "60 mins",
+    costForTwo: "₹1400",
     safetyBadge: true,
     trending: true
   },
   {
     id: 2,
-    restaurant: "Cafe Mocha",
-    image: "https://source.unsplash.com/random/400x250/?cafe,interior",
-    cuisine: "Italian & Mexican",
+    restaurant: "La Piazza",
+    image: "https://source.unsplash.com/random/400x250/?italian,restaurant",
+    cuisine: "Italian & Mediterranean",
     rating: 4.6,
     reviewCount: 892,
     location: "CP, New Delhi",
     distance: "1.8 km",
-    originalPrice: 1200,
-    dineoutPrice: 900,
+    originalPrice: 1600,
+    dineoutPrice: 1200,
     discount: 25,
     offer: "Buy 1 Get 1 on beverages",
     validUntil: "2024-12-31",
-    features: ["Rooftop Seating", "Wi-Fi", "Pet Friendly"],
-    amenities: ["WiFi", "Rooftop", "Pet Friendly", "Live Music"],
+    features: ["Rooftop Seating", "Wine Selection", "Live Chef"],
+    amenities: ["WiFi", "Rooftop", "Wine Bar", "Live Cooking"],
     timeSlots: ["11:00 AM", "1:00 PM", "5:00 PM", "7:00 PM"],
     availableTables: 12,
     phone: "+91 87654 32109",
     status: "Open",
     isLiked: true,
     images: [
-      "https://source.unsplash.com/random/400x250/?cafe,interior",
-      "https://source.unsplash.com/random/400x250/?rooftop,dining",
-      "https://source.unsplash.com/random/400x250/?pizza,pasta"
+      "https://source.unsplash.com/random/400x250/?italian,restaurant",
+      "https://source.unsplash.com/random/400x250/?pizza,pasta",
+      "https://source.unsplash.com/random/400x250/?wine,dining"
     ],
-    popularDishes: ["Margherita Pizza", "Pasta Alfredo", "Mojito"],
+    popularDishes: ["Margherita Pizza", "Pasta Carbonara", "Tiramisu"],
     happyHours: "5:00 PM - 8:00 PM",
-    averageTime: "35 mins",
-    costForTwo: "₹1200",
+    averageTime: "50 mins",
+    costForTwo: "₹1600",
     safetyBadge: true,
     trending: false
   },
   {
     id: 3,
-    restaurant: "The Coffee Bean",
-    image: "https://source.unsplash.com/random/400x250/?coffee,brunch",
-    cuisine: "Continental & Asian",
+    restaurant: "Dragon Palace",
+    image: "https://source.unsplash.com/random/400x250/?chinese,restaurant",
+    cuisine: "Chinese & Thai",
     rating: 4.7,
     reviewCount: 756,
     location: "GK-1, New Delhi",
     distance: "3.1 km",
-    originalPrice: 1000,
-    dineoutPrice: 750,
+    originalPrice: 1200,
+    dineoutPrice: 900,
     discount: 25,
     offer: "Free dessert with main course",
     validUntil: "2024-12-31",
-    features: ["Outdoor Seating", "Brunch Menu", "Parking"],
-    amenities: ["Parking", "Outdoor Seating", "Brunch", "AC"],
+    features: ["Private Dining", "Dim Sum", "Tea Ceremony"],
+    amenities: ["Private Rooms", "Tea Selection", "AC", "Valet"],
     timeSlots: ["10:00 AM", "12:30 PM", "3:00 PM", "6:30 PM"],
     availableTables: 6,
     phone: "+91 76543 21098",
     status: "Busy",
     isLiked: false,
     images: [
-      "https://source.unsplash.com/random/400x250/?coffee,brunch",
-      "https://source.unsplash.com/random/400x250/?outdoor,dining",
-      "https://source.unsplash.com/random/400x250/?dessert,cake"
+      "https://source.unsplash.com/random/400x250/?chinese,restaurant",
+      "https://source.unsplash.com/random/400x250/?dimsum,dumplings",
+      "https://source.unsplash.com/random/400x250/?stirfry,noodles"
     ],
-    popularDishes: ["Eggs Benedict", "French Toast", "Cold Brew"],
+    popularDishes: ["Hakka Noodles", "Manchurian", "Dim Sum"],
     happyHours: "3:00 PM - 6:00 PM",
-    averageTime: "40 mins",
-    costForTwo: "₹1000",
+    averageTime: "45 mins",
+    costForTwo: "₹1200",
+    safetyBadge: true,
+    trending: true
+  },
+  {
+    id: 4,
+    restaurant: "The Steakhouse",
+    image: "https://source.unsplash.com/random/400x250/?steakhouse,grill",
+    cuisine: "Continental & Grills",
+    rating: 4.9,
+    reviewCount: 1456,
+    location: "Cyber Hub, Gurgaon",
+    distance: "5.2 km",
+    originalPrice: 2000,
+    dineoutPrice: 1500,
+    discount: 25,
+    offer: "25% off on weekdays",
+    validUntil: "2024-12-31",
+    features: ["Premium Cuts", "Wine Pairing", "Chef's Table"],
+    amenities: ["Valet", "Wine Cellar", "Private Dining", "Live Grill"],
+    timeSlots: ["7:00 PM", "8:30 PM", "10:00 PM"],
+    availableTables: 4,
+    phone: "+91 65432 10987",
+    status: "Open",
+    isLiked: false,
+    images: [
+      "https://source.unsplash.com/random/400x250/?steakhouse,grill",
+      "https://source.unsplash.com/random/400x250/?steak,meat",
+      "https://source.unsplash.com/random/400x250/?wine,fine-dining"
+    ],
+    popularDishes: ["Ribeye Steak", "Grilled Salmon", "Chocolate Soufflé"],
+    happyHours: "6:00 PM - 8:00 PM",
+    averageTime: "75 mins",
+    costForTwo: "₹2000",
     safetyBadge: true,
     trending: true
   }
@@ -290,11 +323,11 @@ const DineOut = () => {
       
       <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            DineOut Deals
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+            Restaurant Dining
           </h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Book tables, get amazing deals, and enjoy seamless dining experiences
+            Book tables at premium restaurants, get amazing deals, and enjoy fine dining experiences
           </p>
           
           {/* Enhanced Search and Filter Bar */}
