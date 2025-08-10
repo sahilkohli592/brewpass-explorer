@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Coffee } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import krownLogo from '@/assets/krown-logo.png';
 
 interface AnimatedLogoProps {
   className?: string;
@@ -56,9 +56,11 @@ const AnimatedLogo: React.FC<AnimatedLogoProps> = ({
       )}
     >
       <div className="relative">
-        <Coffee 
+        <img 
+          src={krownLogo}
+          alt="Krown Logo"
           className={cn(
-            "text-primary animate-float",
+            "animate-float object-contain",
             sizeClasses[size]
           )} 
         />

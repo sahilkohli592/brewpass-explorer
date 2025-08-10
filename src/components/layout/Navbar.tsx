@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Coffee, List, X, CreditCard, Users, LogIn, LayoutDashboard, User } from 'lucide-react';
+import { List, X, CreditCard, Users, LogIn, LayoutDashboard, User, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import krownLogo from '@/assets/krown-logo.png';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,7 +25,7 @@ const Navbar = () => {
   }, [location.pathname]);
 
   const navItems = [
-    { name: 'Home', path: '/', icon: <Coffee className="w-4 h-4" /> },
+    { name: 'Home', path: '/', icon: <Home className="w-4 h-4" /> },
     { name: 'Cafés', path: '/cafes', icon: <List className="w-4 h-4" /> },
     { name: 'DineOut', path: '/dineout', icon: <CreditCard className="w-4 h-4" /> },
     { name: 'My Pass', path: '/loyalty-card', icon: <CreditCard className="w-4 h-4" /> },
@@ -44,7 +45,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <NavLink to="/" className="flex items-center space-x-3 group">
           <div className="relative">
-            <Coffee className="w-8 h-8 text-primary group-hover:scale-110 transition-transform duration-300" />
+            <img 
+              src={krownLogo}
+              alt="Krown Logo"
+              className="w-8 h-8 object-contain group-hover:scale-110 transition-transform duration-300" 
+            />
             <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full animate-pulse-soft opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
           <span className="font-bold text-xl hidden md:block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
