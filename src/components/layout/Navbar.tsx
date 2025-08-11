@@ -53,7 +53,7 @@ const Navbar = () => {
             <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full animate-pulse-soft opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
           <span className="font-bold text-xl hidden md:block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            BrewPass
+            Krown
           </span>
         </NavLink>
 

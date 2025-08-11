@@ -72,7 +72,7 @@ const AnimatedLogo: React.FC<AnimatedLogoProps> = ({
           "font-bold tracking-tight animate-slide-up",
           textSizeClasses[size]
         )}>
-          BrewPass
+          Krown
         </span>
       )}
     </div>
