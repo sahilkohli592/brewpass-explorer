@@ -20,6 +20,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import ReviewDialog from '@/components/ReviewDialog';
 import { useToast } from '@/hooks/use-toast';
+import cafeInterior from '@/assets/cafe-interior.jpg';
+import cafeOutdoor from '@/assets/cafe-outdoor.jpg';
+import menuFood from '@/assets/menu-food.jpg';
+import menuDrinks from '@/assets/menu-drinks.jpg';
 
 // Dummy data - would come from an API in a real app
 const cafesData = [
@@ -28,7 +32,7 @@ const cafesData = [
     name: "Blue Tokai Coffee",
     address: "Khan Market, New Delhi",
     specialty: "Single Origin Pour Overs",
-    image: "https://source.unsplash.com/random/300x200/?coffee,cafe",
+    image: cafeInterior,
     phone: "+91 98765 43210",
     rating: 4.8,
     menu: ["Espresso", "Cappuccino", "Pour Over", "Cold Brew", "Snacks"],
@@ -57,7 +61,7 @@ const cafesData = [
     name: "Third Wave Coffee",
     address: "Indiranagar, Bangalore",
     specialty: "Specialty Coffee & Pastries",
-    image: "https://source.unsplash.com/random/300x200/?coffee,shop",
+    image: cafeOutdoor,
     phone: "+91 98765 12345",
     rating: 4.5,
     menu: ["Latte", "Flat White", "Americano", "Croissants", "Cakes"],
@@ -84,7 +88,7 @@ const cafesData = [
     name: "Starbucks",
     address: "Connaught Place, New Delhi",
     specialty: "Frappuccinos & Cold Brews",
-    image: "https://source.unsplash.com/random/300x200/?starbucks",
+    image: menuDrinks,
     phone: "+91 11 2334 5678",
     rating: 4.2,
     menu: ["Frappuccino", "Cold Brew", "Latte", "Macchiato", "Sandwiches"],
@@ -111,7 +115,7 @@ const cafesData = [
     name: "Roastery Coffee House",
     address: "Banjara Hills, Hyderabad",
     specialty: "House-roasted Specialty Coffee",
-    image: "https://source.unsplash.com/random/300x200/?roastery",
+    image: menuFood,
     phone: "+91 98450 67890",
     rating: 4.7,
     menu: ["Pour Over", "Aeropress", "Espresso", "Breakfast", "Lunch"],
@@ -138,7 +142,7 @@ const cafesData = [
     name: "Café Coffee Day",
     address: "MG Road, Bangalore",
     specialty: "Signature Cold Coffee",
-    image: "https://source.unsplash.com/random/300x200/?cafe,india",
+    image: cafeInterior,
     phone: "+91 80 2558 9999",
     rating: 4.0,
     menu: ["Devil's Own", "Tropical Iceberg", "Sandwiches", "Desserts"],
@@ -165,7 +169,7 @@ const cafesData = [
     name: "Araku Coffee",
     address: "Indiranagar, Bangalore",
     specialty: "Specialty Indian Coffee",
-    image: "https://source.unsplash.com/random/300x200/?coffee,beans",
+    image: cafeOutdoor,
     phone: "+91 80 4123 4567",
     rating: 4.6,
     menu: ["Filter Coffee", "French Press", "Muffins", "Cookies"],

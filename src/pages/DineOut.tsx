@@ -12,12 +12,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import TableBookingForm from '@/components/dineout/TableBookingForm';
 import PreOrderMenu from '@/components/dineout/PreOrderMenu';
+import cafeInterior from '@/assets/cafe-interior.jpg';
+import cafeOutdoor from '@/assets/cafe-outdoor.jpg';
+import menuFood from '@/assets/menu-food.jpg';
+import menuDrinks from '@/assets/menu-drinks.jpg';
+import comboDeals from '@/assets/combo-deals.jpg';
 
 const dineoutDeals = [
   {
     id: 1,
     restaurant: "Blue Tokai Coffee",
-    image: "https://source.unsplash.com/random/400x250/?restaurant,dining",
+    image: cafeInterior,
     cuisine: "Coffee & Continental",
     rating: 4.8,
     reviewCount: 1205,
@@ -36,9 +41,9 @@ const dineoutDeals = [
     status: "Open",
     isLiked: false,
     images: [
-      "https://source.unsplash.com/random/400x250/?restaurant,dining",
-      "https://source.unsplash.com/random/400x250/?coffee,interior",
-      "https://source.unsplash.com/random/400x250/?food,restaurant"
+      cafeInterior,
+      cafeOutdoor,
+      menuFood
     ],
     popularDishes: ["Espresso", "Avocado Toast", "Croissant"],
     happyHours: "4:00 PM - 7:00 PM",
@@ -50,7 +55,7 @@ const dineoutDeals = [
   {
     id: 2,
     restaurant: "Cafe Mocha",
-    image: "https://source.unsplash.com/random/400x250/?cafe,interior",
+    image: cafeOutdoor,
     cuisine: "Italian & Mexican",
     rating: 4.6,
     reviewCount: 892,
@@ -69,9 +74,9 @@ const dineoutDeals = [
     status: "Open",
     isLiked: true,
     images: [
-      "https://source.unsplash.com/random/400x250/?cafe,interior",
-      "https://source.unsplash.com/random/400x250/?rooftop,dining",
-      "https://source.unsplash.com/random/400x250/?pizza,pasta"
+      cafeOutdoor,
+      menuFood,
+      menuDrinks
     ],
     popularDishes: ["Margherita Pizza", "Pasta Alfredo", "Mojito"],
     happyHours: "5:00 PM - 8:00 PM",
@@ -83,7 +88,7 @@ const dineoutDeals = [
   {
     id: 3,
     restaurant: "The Coffee Bean",
-    image: "https://source.unsplash.com/random/400x250/?coffee,brunch",
+    image: menuDrinks,
     cuisine: "Continental & Asian",
     rating: 4.7,
     reviewCount: 756,
@@ -102,9 +107,9 @@ const dineoutDeals = [
     status: "Busy",
     isLiked: false,
     images: [
-      "https://source.unsplash.com/random/400x250/?coffee,brunch",
-      "https://source.unsplash.com/random/400x250/?outdoor,dining",
-      "https://source.unsplash.com/random/400x250/?dessert,cake"
+      menuDrinks,
+      comboDeals,
+      menuFood
     ],
     popularDishes: ["Eggs Benedict", "French Toast", "Cold Brew"],
     happyHours: "3:00 PM - 6:00 PM",
