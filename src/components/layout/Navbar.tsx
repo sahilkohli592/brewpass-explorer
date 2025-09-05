@@ -32,7 +32,8 @@ const Navbar = () => {
     { name: 'Refer', path: '/referral', icon: <Users className="w-4 h-4" /> },
     { name: 'Profile', path: '/profile', icon: <User className="w-4 h-4" /> },
     { name: 'Login', path: '/login', icon: <LogIn className="w-4 h-4" /> },
-    { name: 'Admin', path: '/admin', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { name: 'Café Admin', path: '/admin', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { name: 'Business', path: '/business', icon: <LayoutDashboard className="w-4 h-4" /> },
   ];
 
   return (

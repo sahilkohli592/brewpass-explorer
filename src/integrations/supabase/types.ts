@@ -14,7 +14,217 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      business_metrics: {
+        Row: {
+          active_cafes: number | null
+          created_at: string
+          id: string
+          metric_date: string
+          new_customers: number | null
+          total_redemptions: number | null
+          total_revenue: number | null
+          total_visits: number | null
+        }
+        Insert: {
+          active_cafes?: number | null
+          created_at?: string
+          id?: string
+          metric_date: string
+          new_customers?: number | null
+          total_redemptions?: number | null
+          total_revenue?: number | null
+          total_visits?: number | null
+        }
+        Update: {
+          active_cafes?: number | null
+          created_at?: string
+          id?: string
+          metric_date?: string
+          new_customers?: number | null
+          total_redemptions?: number | null
+          total_revenue?: number | null
+          total_visits?: number | null
+        }
+        Relationships: []
+      }
+      cafes: {
+        Row: {
+          address: string
+          city: string
+          created_at: string
+          id: string
+          name: string
+          partner_since: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string
+          id?: string
+          name: string
+          partner_since?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string
+          id?: string
+          name?: string
+          partner_since?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customers: {
+        Row: {
+          created_at: string
+          date_joined: string
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          loyalty_points: number | null
+          phone: string | null
+          total_redemptions: number | null
+          total_visits: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          date_joined?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          loyalty_points?: number | null
+          phone?: string | null
+          total_redemptions?: number | null
+          total_visits?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          date_joined?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          loyalty_points?: number | null
+          phone?: string | null
+          total_redemptions?: number | null
+          total_visits?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      redemptions: {
+        Row: {
+          cafe_id: string
+          created_at: string
+          customer_id: string
+          id: string
+          item_redeemed: string
+          points_used: number
+          redeemed_at: string
+          visit_id: string | null
+        }
+        Insert: {
+          cafe_id: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          item_redeemed: string
+          points_used: number
+          redeemed_at?: string
+          visit_id?: string | null
+        }
+        Update: {
+          cafe_id?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          item_redeemed?: string
+          points_used?: number
+          redeemed_at?: string
+          visit_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "redemptions_cafe_id_fkey"
+            columns: ["cafe_id"]
+            isOneToOne: false
+            referencedRelation: "cafes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "redemptions_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "redemptions_visit_id_fkey"
+            columns: ["visit_id"]
+            isOneToOne: false
+            referencedRelation: "visits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visits: {
+        Row: {
+          amount_spent: number | null
+          cafe_id: string
+          created_at: string
+          customer_id: string
+          id: string
+          points_earned: number | null
+          visit_date: string
+        }
+        Insert: {
+          amount_spent?: number | null
+          cafe_id: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          points_earned?: number | null
+          visit_date?: string
+        }
+        Update: {
+          amount_spent?: number | null
+          cafe_id?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          points_earned?: number | null
+          visit_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visits_cafe_id_fkey"
+            columns: ["cafe_id"]
+            isOneToOne: false
+            referencedRelation: "cafes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visits_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
