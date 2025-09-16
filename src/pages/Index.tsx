@@ -1,11 +1,14 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Coffee, ArrowRight, MapPin, CreditCard, Utensils, Heart } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import AnimatedLogo from '@/components/ui/AnimatedLogo';
 import BlurredBackground from '@/components/ui/BlurredBackground';
+import InteractiveCard from '@/components/ui/InteractiveCard';
+import EnhancedButton from '@/components/ui/EnhancedButton';
+import AnimatedCounter from '@/components/ui/AnimatedCounter';
+import PullToRefresh from '@/components/ui/PullToRefresh';
 import cafeInterior from '@/assets/cafe-interior.jpg';
 import cafeOutdoor from '@/assets/cafe-outdoor.jpg';
 import menuFood from '@/assets/menu-food.jpg';
@@ -58,44 +61,68 @@ const Index = () => {
     };
   }, []);
 
+  const handleRefresh = async () => {
+    // Simulate refresh delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    window.location.reload();
+  };
+
   return (
-    <div className="min-h-screen gradient-primary">
-      <BlurredBackground>
-        <div className="absolute inset-0 gradient-primary opacity-50" />
-      </BlurredBackground>
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen gradient-primary">
+        <BlurredBackground>
+          <div className="absolute inset-0 gradient-primary opacity-50" />
+        </BlurredBackground>
       
       {/* Hero Section */}
       <section ref={heroRef} className="relative pt-32 pb-16 px-6 md:pt-40 md:pb-24">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center space-y-8 md:space-y-12">
-            <AnimatedLogo size="lg" className="mx-auto" />
-            
-            <div className="space-y-6 max-w-4xl mx-auto">
-              <h1 className="text-4xl md:text-6xl font-bold animate-slide-up bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                Discover Amazing Café
-                <span className="block text-primary"> Experiences.</span>
-              </h1>
+            <div className="text-center space-y-8 md:space-y-12">
+              <AnimatedLogo size="lg" className="mx-auto" />
               
-              <p className="text-xl text-foreground/80 max-w-3xl mx-auto animate-slide-up leading-relaxed" style={{ animationDelay: '200ms' }}>
-                Your gateway to premium coffee culture. Explore handpicked cafés, 
-                enjoy exclusive deals, and create memorable moments with every sip.
-              </p>
-            </div>
+              <div className="space-y-6 max-w-4xl mx-auto">
+                <h1 className="text-4xl md:text-6xl font-bold animate-slide-up bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                  Discover Amazing Café
+                  <span className="block text-primary"> Experiences.</span>
+                </h1>
+                
+                <p className="text-xl text-foreground/80 max-w-3xl mx-auto animate-slide-up leading-relaxed" style={{ animationDelay: '200ms' }}>
+                  Your gateway to premium coffee culture. Join over{' '}
+                  <AnimatedCounter 
+                    end={50000} 
+                    duration={3000} 
+                    className="text-primary font-bold"
+                    separator=","
+                  />{' '}
+                  coffee lovers exploring handpicked cafés and exclusive deals.
+                </p>
+              </div>
             
             <div className="flex flex-col sm:flex-row justify-center gap-6 pt-6 animate-slide-up" style={{ animationDelay: '400ms' }}>
               <Link to="/cafes">
-                <Button size="lg" className="btn-primary text-lg px-8 py-4">
-                  <Coffee className="mr-2 h-5 w-5" />
+                <EnhancedButton 
+                  variant="gradient" 
+                  size="lg" 
+                  className="text-lg px-8 py-4"
+                  icon={Coffee}
+                  iconPosition="left"
+                  glow
+                >
                   Explore Cafés
-                </Button>
+                </EnhancedButton>
               </Link>
               
               <Link to="/dineout">
-                <Button size="lg" className="btn-secondary text-lg px-8 py-4 group">
-                  <MapPin className="mr-2 h-5 w-5" />
+                <EnhancedButton 
+                  variant="glow" 
+                  size="lg" 
+                  className="text-lg px-8 py-4"
+                  icon={MapPin}
+                  iconPosition="left"
+                  haptic={true}
+                >
                   DineOut Deals
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
+                </EnhancedButton>
               </Link>
             </div>
           </div>
@@ -116,12 +143,12 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <GlassmorphicCard 
+              <InteractiveCard 
                 key={index}
-                className="menu-card p-8 animate-on-scroll opacity-0 h-full group" 
-                animation="fade-in"
-                delay={index * 200}
-                hover
+                className="menu-card p-8 animate-on-scroll opacity-0 h-full" 
+                tiltEffect={true}
+                glowOnHover={true}
+                hapticFeedback={true}
               >
                 <div className="flex flex-col items-center text-center">
                   <div className="bg-gradient-to-r from-primary to-accent p-4 rounded-full mb-6 text-white group-hover:scale-110 transition-transform duration-300">
@@ -130,7 +157,7 @@ const Index = () => {
                   <h3 className="text-xl font-bold mb-3 text-primary">{feature.title}</h3>
                   <p className="text-foreground/80 leading-relaxed">{feature.description}</p>
                 </div>
-              </GlassmorphicCard>
+              </InteractiveCard>
             ))}
           </div>
         </div>
@@ -259,10 +286,16 @@ const Index = () => {
                 <p className="text-foreground/80 mb-4">Any specialty coffee with fresh baked pastry</p>
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-brew-700">₹249</span>
-                  <Button size="sm" className="bg-brew-600 hover:bg-brew-700">
-                    <Heart className="mr-2 h-4 w-4" />
+                  <EnhancedButton 
+                    size="sm" 
+                    variant="gradient"
+                    className="group"
+                    icon={Heart}
+                    iconPosition="left"
+                    glow
+                  >
                     Order Now
-                  </Button>
+                  </EnhancedButton>
                 </div>
               </div>
             </GlassmorphicCard>
@@ -285,10 +318,14 @@ const Index = () => {
                 <p className="text-foreground/80 mb-4">Coffee + sandwich + side salad</p>
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-brew-700">₹399</span>
-                  <Button size="sm" className="bg-brew-600 hover:bg-brew-700">
-                    <Utensils className="mr-2 h-4 w-4" />
+                  <EnhancedButton 
+                    size="sm" 
+                    variant="gradient"
+                    icon={Utensils}
+                    iconPosition="left"
+                  >
                     Order Now
-                  </Button>
+                  </EnhancedButton>
                 </div>
               </div>
             </GlassmorphicCard>
@@ -311,10 +348,14 @@ const Index = () => {
                 <p className="text-foreground/80 mb-4">Premium coffee with artisan cake slice</p>
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-bold text-brew-700">₹329</span>
-                  <Button size="sm" className="bg-brew-600 hover:bg-brew-700">
-                    <Coffee className="mr-2 h-4 w-4" />
+                  <EnhancedButton 
+                    size="sm" 
+                    variant="glow"
+                    icon={Coffee}
+                    iconPosition="left"
+                  >
                     Order Now
-                  </Button>
+                  </EnhancedButton>
                 </div>
               </div>
             </GlassmorphicCard>
@@ -338,16 +379,27 @@ const Index = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <Link to="/cafes">
-                    <Button size="lg" className="bg-brew-600 hover:bg-brew-700 text-white text-lg px-8 py-4">
-                      <Coffee className="mr-2 h-5 w-5" />
+                    <EnhancedButton 
+                      size="lg" 
+                      variant="gradient"
+                      className="text-lg px-8 py-4"
+                      icon={Coffee}
+                      iconPosition="left"
+                      glow
+                    >
                       Explore Now
-                    </Button>
+                    </EnhancedButton>
                   </Link>
                   <Link to="/loyalty-card">
-                    <Button size="lg" className="bg-brew-500 hover:bg-brew-600 text-white text-lg px-8 py-4">
-                      <CreditCard className="mr-2 h-5 w-5" />
+                    <EnhancedButton 
+                      size="lg" 
+                      variant="glow"
+                      className="text-lg px-8 py-4"
+                      icon={CreditCard}
+                      iconPosition="left"
+                    >
                       Get Loyalty Card
-                    </Button>
+                    </EnhancedButton>
                   </Link>
                 </div>
               </div>
@@ -355,7 +407,8 @@ const Index = () => {
           </GlassmorphicCard>
         </div>
       </section>
-    </div>
+      </div>
+    </PullToRefresh>
   );
 };
 

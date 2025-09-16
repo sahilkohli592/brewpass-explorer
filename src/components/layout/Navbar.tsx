@@ -4,6 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { List, X, CreditCard, Users, LogIn, LayoutDashboard, User, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import krownLogo from '@/assets/krown-logo.png';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,34 +60,40 @@ const Navbar = () => {
         </NavLink>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-2">
-          {navItems.map((item) => (
-            <NavLink 
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) => 
-                isActive ? 'nav-link active' : 'nav-link'
-              }
-            >
-              <span className="flex items-center space-x-2">
-                {item.icon} <span>{item.name}</span>
-              </span>
-            </NavLink>
-          ))}
-        </nav>
+        <div className="hidden md:flex items-center space-x-4">
+          <nav className="flex space-x-2">
+            {navItems.map((item) => (
+              <NavLink 
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) => 
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
+              >
+                <span className="flex items-center space-x-2">
+                  {item.icon} <span>{item.name}</span>
+                </span>
+              </NavLink>
+            ))}
+          </nav>
+          <ThemeToggle />
+        </div>
 
-        {/* Mobile Menu Button */}
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden p-3 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-all duration-300"
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-        >
-          {isMobileMenuOpen ? (
-            <X className="w-5 h-5 text-primary" />
-          ) : (
-            <List className="w-5 h-5 text-primary" />
-          )}
-        </button>
+        {/* Mobile Navigation */}
+        <div className="md:hidden flex items-center space-x-2">
+          <ThemeToggle />
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-3 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/20 transition-all duration-300"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5 text-primary" />
+            ) : (
+              <List className="w-5 h-5 text-primary" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
