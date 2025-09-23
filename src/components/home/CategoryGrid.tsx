@@ -3,14 +3,14 @@ import { Coffee, Pizza, Sandwich, IceCream, Cake, Salad, Croissant, Soup } from 
 import InteractiveCard from '@/components/ui/InteractiveCard';
 
 const categories = [
-  { name: 'Coffee', icon: Coffee, color: 'from-amber-500 to-orange-600' },
-  { name: 'Pizza', icon: Pizza, color: 'from-red-500 to-pink-600' },
-  { name: 'Sandwich', icon: Sandwich, color: 'from-green-500 to-emerald-600' },
-  { name: 'Desserts', icon: IceCream, color: 'from-purple-500 to-indigo-600' },
-  { name: 'Cakes', icon: Cake, color: 'from-pink-500 to-rose-600' },
-  { name: 'Salads', icon: Salad, color: 'from-lime-500 to-green-600' },
-  { name: 'Pastries', icon: Croissant, color: 'from-yellow-500 to-amber-600' },
-  { name: 'Soups', icon: Soup, color: 'from-orange-500 to-red-600' },
+  { name: 'Coffee', icon: Coffee, color: 'bg-primary/10 text-primary' },
+  { name: 'Pizza', icon: Pizza, color: 'bg-red-50 text-red-600' },
+  { name: 'Sandwich', icon: Sandwich, color: 'bg-green-50 text-green-600' },
+  { name: 'Desserts', icon: IceCream, color: 'bg-purple-50 text-purple-600' },
+  { name: 'Cakes', icon: Cake, color: 'bg-pink-50 text-pink-600' },
+  { name: 'Salads', icon: Salad, color: 'bg-emerald-50 text-emerald-600' },
+  { name: 'Pastries', icon: Croissant, color: 'bg-amber-50 text-amber-600' },
+  { name: 'Soups', icon: Soup, color: 'bg-orange-50 text-orange-600' },
 ];
 
 const CategoryGrid = () => {
@@ -28,7 +28,7 @@ const CategoryGrid = () => {
               hapticFeedback={true}
             >
               <div className="flex flex-col items-center text-center space-y-2">
-                <div className={`bg-gradient-to-br ${category.color} p-3 rounded-full text-white group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`${category.color} p-3 rounded-xl group-hover:scale-105 transition-transform duration-200`}>
                   <category.icon className="w-6 h-6" />
                 </div>
                 <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">

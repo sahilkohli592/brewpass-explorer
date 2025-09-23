@@ -1,10 +1,8 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Coffee, ArrowRight, MapPin, CreditCard, Utensils, Heart, Zap, Gift } from 'lucide-react';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import AnimatedLogo from '@/components/ui/AnimatedLogo';
-import BlurredBackground from '@/components/ui/BlurredBackground';
 import InteractiveCard from '@/components/ui/InteractiveCard';
 import EnhancedButton from '@/components/ui/EnhancedButton';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
@@ -13,11 +11,8 @@ import CategoryGrid from '@/components/home/CategoryGrid';
 import OffersCarousel from '@/components/home/OffersCarousel';
 import QuickActions from '@/components/home/QuickActions';
 import PopularSection from '@/components/home/PopularSection';
-import cafeInterior from '@/assets/cafe-interior.jpg';
-import cafeOutdoor from '@/assets/cafe-outdoor.jpg';
 import menuFood from '@/assets/menu-food.jpg';
 import menuDrinks from '@/assets/menu-drinks.jpg';
-import comboDeals from '@/assets/combo-deals.jpg';
 
 const features = [
   {
@@ -75,17 +70,15 @@ const Index = () => {
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section ref={heroRef} className="relative pt-20 pb-8 px-6 gradient-primary">
-          <BlurredBackground>
-            <div className="absolute inset-0 gradient-primary opacity-50" />
-          </BlurredBackground>
+        <section ref={heroRef} className="relative pt-20 pb-8 px-6 bg-gradient-to-br from-primary/5 to-accent/5">
+          <div className="absolute inset-0 bg-white/60" />
           
           <div className="max-w-6xl mx-auto relative z-10">
             <div className="text-center space-y-6">
               <AnimatedLogo size="md" className="mx-auto" />
               
               <div className="space-y-4 max-w-4xl mx-auto">
-                <h1 className="text-3xl md:text-5xl font-bold animate-slide-up bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                <h1 className="text-3xl md:text-5xl font-bold animate-slide-up text-foreground">
                   Craving Something Delicious?
                 </h1>
                 
@@ -145,7 +138,7 @@ const Index = () => {
         <PopularSection />
 
         {/* Features Section */}
-        <section className="relative py-16 md:py-20 px-6 bg-secondary/20">
+        <section className="relative py-16 md:py-20 px-6 bg-secondary/30">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12 animate-on-scroll opacity-0">
               <h2 className="text-2xl md:text-4xl font-bold mb-4 text-foreground">
@@ -166,7 +159,7 @@ const Index = () => {
                   hapticFeedback={true}
                 >
                   <div className="flex flex-col items-center text-center">
-                    <div className="bg-gradient-to-r from-primary to-accent p-3 rounded-full mb-4 text-white group-hover:scale-110 transition-transform duration-300">
+                    <div className="bg-primary/10 text-primary p-3 rounded-full mb-4 group-hover:scale-105 transition-transform duration-200">
                       {feature.icon}
                     </div>
                     <h3 className="text-lg font-bold mb-2 text-primary">{feature.title}</h3>
@@ -235,7 +228,7 @@ const Index = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="relative py-16 md:py-20 px-6 gradient-primary">
+        <section className="relative py-16 md:py-20 px-6 bg-gradient-to-br from-primary/5 to-accent/5">
           <div className="max-w-4xl mx-auto">
             <GlassmorphicCard className="menu-card overflow-hidden animate-on-scroll opacity-0">
               <div className="p-8 md:p-12 text-center relative">

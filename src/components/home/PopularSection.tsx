@@ -96,7 +96,7 @@ const PopularSection = () => {
       <div className="max-w-6xl mx-auto">
         <Tabs defaultValue="popular" className="w-full">
           <div className="flex items-center justify-between mb-6">
-            <TabsList className="glass">
+            <TabsList className="bg-secondary/50 border border-border/30">
               <TabsTrigger value="popular">Popular</TabsTrigger>
               <TabsTrigger value="nearby">Nearby</TabsTrigger>
               <TabsTrigger value="offers">Best Offers</TabsTrigger>

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 const QuickActions = () => {
   return (
-    <section className="py-6 px-6 bg-background/50 backdrop-blur-sm sticky top-16 z-40 border-b border-border/50">
+    <section className="py-6 px-6 bg-white/95 backdrop-blur-sm sticky top-16 z-40 border-b border-border/30">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-4">
           {/* Search Bar */}
@@ -22,7 +22,7 @@ const QuickActions = () => {
             <Button
               variant="outline"
               size="icon"
-              className="glass border-border/20"
+              className="border-border/30 hover:bg-primary/5"
             >
               <Filter className="w-5 h-5" />
             </Button>
@@ -30,7 +30,7 @@ const QuickActions = () => {
             <Button
               variant="outline"
               size="icon"
-              className="glass border-border/20"
+              className="border-border/30 hover:bg-primary/5"
             >
               <ScanLine className="w-5 h-5" />
             </Button>
@@ -38,7 +38,7 @@ const QuickActions = () => {
             <Button
               variant="outline"
               size="icon"
-              className="glass border-border/20"
+              className="border-border/30 hover:bg-primary/5"
             >
               <MapPin className="w-5 h-5" />
             </Button>
