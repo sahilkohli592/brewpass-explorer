@@ -125,81 +125,6 @@ export type Database = {
         }
         Relationships: []
       }
-      notifications: {
-        Row: {
-          action_url: string | null
-          created_at: string
-          id: string
-          is_read: boolean | null
-          message: string
-          metadata: Json | null
-          title: string
-          type: string
-          user_id: string
-        }
-        Insert: {
-          action_url?: string | null
-          created_at?: string
-          id?: string
-          is_read?: boolean | null
-          message: string
-          metadata?: Json | null
-          title: string
-          type?: string
-          user_id: string
-        }
-        Update: {
-          action_url?: string | null
-          created_at?: string
-          id?: string
-          is_read?: boolean | null
-          message?: string
-          metadata?: Json | null
-          title?: string
-          type?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string
-          full_name: string | null
-          id: string
-          loyalty_points: number | null
-          phone: string | null
-          preferences: Json | null
-          total_visits: number | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
-          id?: string
-          loyalty_points?: number | null
-          phone?: string | null
-          preferences?: Json | null
-          total_visits?: number | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string
-          full_name?: string | null
-          id?: string
-          loyalty_points?: number | null
-          phone?: string | null
-          preferences?: Json | null
-          total_visits?: number | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       redemptions: {
         Row: {
           cafe_id: string
@@ -254,45 +179,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      user_preferences: {
-        Row: {
-          created_at: string
-          email_notifications: boolean | null
-          id: string
-          location_sharing: boolean | null
-          notifications_enabled: boolean | null
-          preferred_language: string | null
-          push_notifications: boolean | null
-          theme: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          email_notifications?: boolean | null
-          id?: string
-          location_sharing?: boolean | null
-          notifications_enabled?: boolean | null
-          preferred_language?: string | null
-          push_notifications?: boolean | null
-          theme?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          email_notifications?: boolean | null
-          id?: string
-          location_sharing?: boolean | null
-          notifications_enabled?: boolean | null
-          preferred_language?: string | null
-          push_notifications?: boolean | null
-          theme?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
       }
       visits: {
         Row: {
