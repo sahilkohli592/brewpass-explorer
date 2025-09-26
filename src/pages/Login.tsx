@@ -1,6 +1,8 @@
 
-import React, { useState } from 'react';
-import { LogIn, Coffee, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { LogIn, Coffee, ArrowRight, UserPlus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import GlassmorphicCard from '@/components/ui/GlassmorphicCard';
 import BlurredBackground from '@/components/ui/BlurredBackground';
 import { Button } from '@/components/ui/button';
@@ -10,21 +12,47 @@ import { Separator } from '@/components/ui/separator';
 import AnimatedLogo from '@/components/ui/AnimatedLogo';
 
 const Login = () => {
-  // In a real app, this would connect to authentication services
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
   
-  const handleEmailSignIn = (e: React.FormEvent) => {
+  const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+
+    if (isSignUp && password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
     setLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      if (isSignUp) {
+        await signUp(email, password, fullName);
+      } else {
+        const { error } = await signIn(email, password);
+        if (!error) {
+          navigate('/');
+        }
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+    } finally {
       setLoading(false);
-      // In a real app, you would handle authentication here
-      console.log('Sign in with:', email, password);
-    }, 1500);
+    }
   };
   
   const handleGoogleSignIn = () => {
@@ -43,106 +71,148 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8 animate-fade-in">
           <AnimatedLogo className="mx-auto mb-8" />
-          <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            {isSignUp ? 'Create Account' : 'Welcome Back'}
+          </h1>
           <p className="text-foreground/70">
-            Sign in to access your BrewPass account
+            {isSignUp 
+              ? 'Join BrewPass and start earning rewards'
+              : 'Sign in to access your BrewPass account'
+            }
           </p>
         </div>
         
         <GlassmorphicCard className="animate-scale">
           <Tabs defaultValue="email" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="email">Email</TabsTrigger>
-              <TabsTrigger value="phone">Phone</TabsTrigger>
-            </TabsList>
+            <div className="flex justify-center mb-6">
+              <div className="flex bg-muted rounded-lg p-1">
+                <Button
+                  type="button"
+                  variant={!isSignUp ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setIsSignUp(false)}
+                  className="px-6"
+                >
+                  Sign In
+                </Button>
+                <Button
+                  type="button"
+                  variant={isSignUp ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setIsSignUp(true)}
+                  className="px-6"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </div>
             
             <div className="p-6">
-              <TabsContent value="email">
-                <form onSubmit={handleEmailSignIn} className="space-y-4">
+              <form onSubmit={handleEmailAuth} className="space-y-4">
+                {isSignUp && (
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                      Email
+                    <label htmlFor="fullName" className="text-sm font-medium">
+                      Full Name
                     </label>
                     <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
+                      id="fullName"
+                      type="text"
+                      placeholder="John Doe"
                       required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                       className="input-field"
                     />
                   </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <label htmlFor="password" className="text-sm font-medium">
-                        Password
-                      </label>
+                )}
+                
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <label htmlFor="password" className="text-sm font-medium">
+                      Password
+                    </label>
+                    {!isSignUp && (
                       <a 
                         href="#" 
                         className="text-sm text-primary hover:underline"
                       >
                         Forgot?
                       </a>
-                    </div>
+                    )}
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    required
+                    minLength={6}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+
+                {isSignUp && (
+                  <div className="space-y-2">
+                    <label htmlFor="confirmPassword" className="text-sm font-medium">
+                      Confirm Password
+                    </label>
                     <Input
-                      id="password"
+                      id="confirmPassword"
                       type="password"
                       placeholder="••••••••"
                       required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      minLength={6}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                       className="input-field"
                     />
                   </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full btn-primary"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                        <span>Signing in...</span>
-                      </div>
-                    ) : (
-                      <span className="flex items-center justify-center">
-                        <LogIn className="mr-2 h-4 w-4" />
-                        Sign In
-                      </span>
-                    )}
-                  </Button>
-                </form>
-              </TabsContent>
-              
-              <TabsContent value="phone">
-                <form className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="phone" className="text-sm font-medium">
-                      Phone Number
-                    </label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+91 9876543210"
-                      required
-                      className="input-field"
-                    />
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full btn-primary"
-                  >
+                )}
+                
+                <Button 
+                  type="submit" 
+                  className="w-full btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                      <span>{isSignUp ? 'Creating account...' : 'Signing in...'}</span>
+                    </div>
+                  ) : (
                     <span className="flex items-center justify-center">
-                      Send OTP
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      {isSignUp ? (
+                        <>
+                          <UserPlus className="mr-2 h-4 w-4" />
+                          Create Account
+                        </>
+                      ) : (
+                        <>
+                          <LogIn className="mr-2 h-4 w-4" />
+                          Sign In
+                        </>
+                      )}
                     </span>
-                  </Button>
-                </form>
-              </TabsContent>
+                  )}
+                </Button>
+              </form>
+              
               
               <div className="mt-6">
                 <div className="relative">
@@ -181,10 +251,14 @@ const Login = () => {
         
         <div className="text-center mt-8 animate-fade-in" style={{ animationDelay: '400ms' }}>
           <p className="text-sm text-foreground/70">
-            Don't have an account?{' '}
-            <a href="#" className="text-primary hover:underline">
-              Sign up for BrewPass
-            </a>
+            {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
+            <button
+              type="button"
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-primary hover:underline"
+            >
+              {isSignUp ? 'Sign in here' : 'Sign up for BrewPass'}
+            </button>
           </p>
         </div>
       </div>

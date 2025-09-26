@@ -1,0 +1,71 @@
+{
+  "name": "Krown - Coffee Experience App",
+  "short_name": "Krown",
+  "description": "Discover amazing cafés, exclusive deals, and create memorable coffee moments",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fceef8",
+  "theme_color": "#f472b6",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "lifestyle", "business"],
+  "lang": "en",
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Krown App Desktop View"
+    },
+    {
+      "src": "/screenshot-narrow.png", 
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Krown App Mobile View"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Find Cafés",
+      "short_name": "Cafés",
+      "description": "Discover amazing coffee shops near you",
+      "url": "/cafes",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "My BrewPass",
+      "short_name": "Pass",
+      "description": "Access your loyalty card and rewards",
+      "url": "/loyalty-card",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
