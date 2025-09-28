@@ -8,6 +8,11 @@ import {
   QrCode,
   ChevronDown,
   ChevronUp,
+  Menu,
+  Store,
+  UtensilsCrossed,
+  Bell,
+  Calendar,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,8 +20,13 @@ import QrScanner from '@/components/admin/QrScanner';
 import VisitStats from '@/components/admin/VisitStats';
 import PromotionManager from '@/components/admin/PromotionManager';
 import FraudReporting from '@/components/admin/FraudReporting';
+import MenuManager from '@/components/admin/MenuManager';
+import CafeDetails from '@/components/admin/CafeDetails';
+import DineOutPromotion from '@/components/admin/DineOutPromotion';
+import NotificationCenter from '@/components/admin/NotificationCenter';
+import ReservationManager from '@/components/admin/ReservationManager';
 
-type TabType = 'scanner' | 'stats' | 'promotions' | 'reports';
+type TabType = 'scanner' | 'stats' | 'promotions' | 'reports' | 'menu' | 'details' | 'dineout' | 'notifications' | 'reservations';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>('scanner');
@@ -76,10 +86,40 @@ const AdminDashboard = () => {
                     onClick={() => setActiveTab('stats')}
                   />
                   <TabButton 
+                    icon={<Menu />}
+                    label="Menu Management"
+                    isActive={activeTab === 'menu'}
+                    onClick={() => setActiveTab('menu')}
+                  />
+                  <TabButton 
+                    icon={<Store />}
+                    label="Cafe Details"
+                    isActive={activeTab === 'details'}
+                    onClick={() => setActiveTab('details')}
+                  />
+                  <TabButton 
                     icon={<Percent />}
                     label="Manage Promotions"
                     isActive={activeTab === 'promotions'}
                     onClick={() => setActiveTab('promotions')}
+                  />
+                  <TabButton 
+                    icon={<UtensilsCrossed />}
+                    label="Dine-Out Promotions"
+                    isActive={activeTab === 'dineout'}
+                    onClick={() => setActiveTab('dineout')}
+                  />
+                  <TabButton 
+                    icon={<Bell />}
+                    label="Notifications"
+                    isActive={activeTab === 'notifications'}
+                    onClick={() => setActiveTab('notifications')}
+                  />
+                  <TabButton 
+                    icon={<Calendar />}
+                    label="Reservations"
+                    isActive={activeTab === 'reservations'}
+                    onClick={() => setActiveTab('reservations')}
                   />
                   <TabButton 
                     icon={<ShieldAlert />}
@@ -102,8 +142,28 @@ const AdminDashboard = () => {
               <VisitStats />
             </TabsContent>
             
+            <TabsContent value="menu" className="mt-0">
+              <MenuManager />
+            </TabsContent>
+            
+            <TabsContent value="details" className="mt-0">
+              <CafeDetails />
+            </TabsContent>
+            
             <TabsContent value="promotions" className="mt-0">
               <PromotionManager />
+            </TabsContent>
+            
+            <TabsContent value="dineout" className="mt-0">
+              <DineOutPromotion />
+            </TabsContent>
+            
+            <TabsContent value="notifications" className="mt-0">
+              <NotificationCenter />
+            </TabsContent>
+            
+            <TabsContent value="reservations" className="mt-0">
+              <ReservationManager />
             </TabsContent>
             
             <TabsContent value="reports" className="mt-0">
