@@ -10,6 +10,10 @@ import PullToRefresh from '@/components/ui/PullToRefresh';
 import HeroBanner from '@/components/home/HeroBanner';
 import NearbyCafes from '@/components/home/NearbyCafes';
 import LoyaltySection from '@/components/home/LoyaltySection';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import PopularMenuSection from '@/components/home/PopularMenuSection';
+import QuickStatsSection from '@/components/home/QuickStatsSection';
+import DownloadAppSection from '@/components/home/DownloadAppSection';
 import { Badge } from '@/components/ui/badge';
 import comboDeals from '@/assets/combo-deals.jpg';
 
@@ -92,6 +96,9 @@ const Index = () => {
         {/* Nearby Cafés */}
         <NearbyCafes />
 
+        {/* Quick Stats */}
+        <QuickStatsSection />
+
         {/* Order Now Section */}
         <section className="py-16 px-6 bg-muted/20">
           <div className="max-w-6xl mx-auto text-center">
@@ -116,6 +123,9 @@ const Index = () => {
 
         {/* My Rewards / Loyalty Section */}
         <LoyaltySection />
+
+        {/* Popular Menu Items */}
+        <PopularMenuSection />
 
         {/* Features Section */}
         <section className="py-16 px-6">
@@ -256,6 +266,12 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Testimonials */}
+        <TestimonialsSection />
+
+        {/* Download App Section */}
+        <DownloadAppSection />
       </div>
     </PullToRefresh>
   );
